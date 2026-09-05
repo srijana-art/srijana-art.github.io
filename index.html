@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Srijana GS — Artist</title>
 <meta name="description" content="Srijana GS is a self-taught artist working in acrylic and watercolor, painting portraits, landscapes, and still life inspired by memory, culture, and everyday tenderness.">
+<meta property="og:title" content="Srijana GS — Artist">
+<meta property="og:description" content="Portraits, landscapes and still life in acrylic and watercolour, carried between Nepal and Leipzig.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="images/thumbs/art3.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -33,6 +37,7 @@
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
   }
+  body.no-scroll { overflow: hidden; }
 
   h1, h2, h3, .display {
     font-family: 'Fraunces', Georgia, serif;
@@ -81,8 +86,6 @@
     font-weight: 500;
   }
   nav.links a:hover { color: var(--accent); text-decoration: none; }
-
-  .nav-toggle { display: none; }
 
   /* ---------- Hero ---------- */
   .hero {
@@ -166,7 +169,7 @@
     overflow: hidden;
     box-shadow: 0 20px 45px -20px rgba(42, 36, 32, 0.35);
   }
-  .about-portrait img { width: 100%; display: block; }
+  .about-portrait img { width: 100%; height: auto; display: block; }
   .about-text p { color: var(--ink-soft); font-size: 1.03rem; margin: 0 0 18px; }
   .about-text p:last-child { margin-bottom: 0; }
   .about-text .quote {
@@ -203,7 +206,7 @@
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-bottom: 44px;
+    margin-bottom: 40px;
     flex-wrap: wrap;
   }
   .filter-btn {
@@ -219,40 +222,53 @@
   }
   .filter-btn:hover { border-color: var(--accent-soft); color: var(--accent); }
   .filter-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .filter-btn .count { opacity: 0.55; font-size: 0.78em; margin-left: 5px; }
 
+  /* Masonry columns keep every painting at its true proportions */
   .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
+    column-count: 3;
+    column-gap: 22px;
   }
   .art-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
     position: relative;
+    margin: 0 0 22px;
     border-radius: 10px;
     overflow: hidden;
     background: #fff;
-    box-shadow: 0 12px 30px -18px rgba(42, 36, 32, 0.3);
-    cursor: pointer;
+    border: 1px solid rgba(42, 36, 32, 0.09);
+    box-shadow: 0 12px 30px -18px rgba(42, 36, 32, 0.35);
+    cursor: zoom-in;
+    display: block;
   }
+  .art-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   .art-card img {
     width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
+    height: auto;
     display: block;
-    transition: transform 0.4s ease;
+    transition: transform 0.45s ease;
+    background: var(--paper-warm);
   }
-  .art-card:hover img { transform: scale(1.045); }
+  .art-card:hover img { transform: scale(1.035); }
   .art-caption {
     position: absolute;
     inset: auto 0 0 0;
     background: linear-gradient(180deg, transparent, rgba(20,15,12,0.88) 70%);
     color: #f7f1e8;
-    padding: 36px 16px 14px;
-    font-size: 0.86rem;
+    padding: 40px 16px 14px;
+    font-size: 0.84rem;
     opacity: 0;
     transition: opacity 0.25s ease;
+    pointer-events: none;
   }
-  .art-card:hover .art-caption { opacity: 1; }
-  .art-caption strong { display: block; font-family: 'Fraunces', serif; font-size: 1.02rem; margin-bottom: 3px; font-weight: 500; }
+  .art-card:hover .art-caption,
+  .art-card:focus-visible .art-caption { opacity: 1; }
+  .art-caption strong { display: block; font-family: 'Fraunces', serif; font-size: 1.02rem; margin-bottom: 2px; font-weight: 500; }
+
+  @media (hover: none) {
+    .art-caption { opacity: 1; }
+  }
 
   .art-card.hidden { display: none; }
 
@@ -261,43 +277,65 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(20, 15, 12, 0.92);
+    background: rgba(18, 13, 10, 0.975);
+    backdrop-filter: blur(6px);
     z-index: 100;
     align-items: center;
     justify-content: center;
-    padding: 40px;
+    padding: 64px 72px;
   }
   .lightbox.open { display: flex; }
   .lightbox-content {
-    max-width: 780px;
+    max-width: 900px;
     width: 100%;
     text-align: center;
   }
   .lightbox-content img {
     max-width: 100%;
-    max-height: 68vh;
-    border-radius: 8px;
-    box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+    max-height: 66vh;
+    width: auto;
+    border-radius: 6px;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.55);
   }
-  .lightbox-info { color: #f2ece2; margin-top: 22px; }
-  .lightbox-info strong { font-family: 'Fraunces', serif; font-size: 1.3rem; display: block; margin-bottom: 8px; font-weight: 500; }
-  .lightbox-info p { color: #cfc4b6; font-size: 0.95rem; max-width: 560px; margin: 0 auto; }
-  .lightbox-close {
+  .lightbox-info { color: #f2ece2; margin-top: 20px; }
+  .lightbox-info strong { font-family: 'Fraunces', serif; font-size: 1.3rem; display: block; margin-bottom: 4px; font-weight: 500; }
+  .lightbox-info .medium {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent-soft);
+    margin-bottom: 12px;
+  }
+  .lightbox-info p { color: #cfc4b6; font-size: 0.95rem; max-width: 580px; margin: 0 auto; }
+  .lb-btn {
     position: absolute;
-    top: 26px;
-    right: 32px;
-    color: #f2ece2;
-    font-size: 1.8rem;
-    cursor: pointer;
     background: none;
     border: none;
+    color: #f2ece2;
+    cursor: pointer;
     line-height: 1;
+    padding: 10px 14px;
+    border-radius: 999px;
+    transition: background 0.15s ease;
+  }
+  .lb-btn:hover { background: rgba(255,255,255,0.12); }
+  .lightbox-close { top: 20px; right: 24px; font-size: 1.9rem; }
+  .lightbox-prev, .lightbox-next { top: 50%; transform: translateY(-50%); font-size: 2.2rem; }
+  .lightbox-prev { left: 14px; }
+  .lightbox-next { right: 14px; }
+  .lightbox-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 0; right: 0;
+    text-align: center;
+    color: #8d827a;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
   }
 
   /* ---------- Process strip ---------- */
-  .process {
-    background: var(--paper-warm);
-  }
+  .process { background: var(--paper-warm); }
   .process-grid {
     max-width: 720px;
     margin: 0 auto;
@@ -351,14 +389,25 @@
   @media (max-width: 860px) {
     nav.links { display: none; }
     .about-grid { grid-template-columns: 1fr; gap: 36px; }
-    .process-grid { grid-template-columns: 1fr; gap: 30px; }
-    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-grid { column-count: 2; }
+    .lightbox { padding: 56px 20px; }
+    .lightbox-prev { left: 2px; }
+    .lightbox-next { right: 2px; }
   }
   @media (max-width: 540px) {
     .hero { padding: 64px 0 48px; }
     section { padding: 60px 0; }
-    .gallery-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+    .gallery-grid { column-count: 2; column-gap: 12px; }
+    .art-card { margin-bottom: 12px; }
+    .art-caption { padding: 28px 10px 9px; font-size: 0.72rem; }
+    .art-caption strong { font-size: 0.85rem; }
     .contact-box { padding: 44px 24px; }
+    .lightbox-content img { max-height: 58vh; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .art-card img, .art-caption { transition: none; }
+    .art-card:hover img { transform: none; }
   }
 </style>
 </head>
@@ -391,7 +440,7 @@
 <section id="about">
   <div class="wrap about-grid">
     <div class="about-portrait">
-      <img src="images/mother-child.png" alt="Portrait painting by Srijana GS of a mother carrying her child in a traditional woven wrap">
+      <img src="images/web/art1.jpg" width="1275" height="1800" alt="Portrait painting by Srijana GS of a mother carrying her child in a traditional woven wrap">
     </div>
     <div class="about-text">
       <div class="section-head" style="text-align:left; margin: 0 0 20px;">
@@ -403,7 +452,7 @@
       <div class="quote">"Painting has always served as my inner world — allowing me to dive in and sit with the characters I paint."</div>
       <p>One painting travelled with her from Thailand to Germany, and on to New Zealand before a PhD — carried along not because it was finished, but because, as she puts it, finishing a piece can feel like its own quiet grief. She's currently based in Leipzig, Germany, still learning — most recently inspired by the work of painter Thomas Braun and a growing love for Impressionism.</p>
       <div class="about-facts">
-        <div class="fact"><span class="num">Acrylic</span><span class="label">& Watercolor</span></div>
+        <div class="fact"><span class="num">25</span><span class="label">Works shown</span></div>
         <div class="fact"><span class="num">Nepal → Leipzig</span><span class="label">Journey</span></div>
         <div class="fact"><span class="num">Self-taught</span><span class="label">Practice</span></div>
       </div>
@@ -416,47 +465,241 @@
     <div class="section-head">
       <div class="kicker">Selected work</div>
       <h2>Gallery</h2>
-      <p>A small selection of paintings — portraits, still life, and studies in progress. Follow along on Instagram for the full collection and new work as it's finished.</p>
+      <p>Twenty-five paintings — portraits, landscapes, and still life studies. Click any piece to see it larger. Follow along on Instagram for new work as it's finished.</p>
     </div>
 
     <div class="gallery-filter">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="portrait">Portraits</button>
-      <button class="filter-btn" data-filter="still-life">Still Life</button>
+      <button class="filter-btn active" data-filter="all">All <span class="count">25</span></button>
+      <button class="filter-btn" data-filter="portrait">Portraits <span class="count">11</span></button>
+      <button class="filter-btn" data-filter="landscape">Landscapes <span class="count">8</span></button>
+      <button class="filter-btn" data-filter="still-life">Still Life <span class="count">6</span></button>
     </div>
 
     <div class="gallery-grid">
-      <div class="art-card" data-cat="portrait" onclick="openLightbox(this)"
-           data-full="images/honey-hunters.png"
-           data-title="Honey Hunters of Nepal"
-           data-desc="Begun in February 2022 and completed over a year and a half later, this piece was referenced from a documentary cover photo by a French journalist. “I was captivated by the intensity in their eyes, the fearless expression on their faces, and their unwavering courage.” Acrylic on 180gsm paper, A3.">
-        <img src="images/honey-hunters.png" alt="Painting of two honey hunters of Nepal, acrylic on paper">
-        <div class="art-caption"><strong>Honey Hunters of Nepal</strong>Acrylic on paper, A3</div>
-      </div>
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Honey Hunters of Nepal larger"
+              data-full="images/web/art3.jpg"
+              data-title="Honey Hunters of Nepal"
+              data-medium="Acrylic on 180gsm paper, A3"
+              data-desc="Begun in February 2022 and completed over a year and a half later, referenced from a documentary cover photo by a French journalist. “I was captivated by the intensity in their eyes, the fearless expression on their faces, and their unwavering courage.”">
+        <img src="images/thumbs/art3.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Painting of two honey hunters of Nepal on a rock, one standing with a pole and one crouching">
+        <figcaption class="art-caption"><strong>Honey Hunters of Nepal</strong>Acrylic on 180gsm paper, A3</figcaption>
+      </figure>
 
-      <div class="art-card" data-cat="portrait" onclick="openLightbox(this)"
-           data-full="images/mother-child.png"
-           data-title="Carried"
-           data-desc="A painting close to the artist's heart — begun in Thailand and completed in Germany before travelling on to New Zealand for the start of a PhD. “I have carried this painting wherever I go, and each time I see it, it reminds me to keep practicing art.” Watercolor, 2022.">
-        <img src="images/mother-child.png" alt="Watercolor portrait of a mother carrying her child in a traditional wrap">
-        <div class="art-caption"><strong>Carried</strong>Watercolor</div>
-      </div>
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Carried larger"
+              data-full="images/web/art1.jpg"
+              data-title="Carried"
+              data-medium="Watercolour"
+              data-desc="A painting close to the artist's heart — begun in Thailand and completed in Germany before travelling on to New Zealand for the start of a PhD. “I have carried this painting wherever I go, and each time I see it, it reminds me to keep practicing art.”">
+        <img src="images/thumbs/art1.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Watercolour portrait of a mother carrying her child on her back in a plaid woven wrap">
+        <figcaption class="art-caption"><strong>Carried</strong>Watercolour</figcaption>
+      </figure>
 
-      <div class="art-card" data-cat="portrait" onclick="openLightbox(this)"
-           data-full="images/goat-and-child.png"
-           data-title="Waiting"
-           data-desc="The second time the artist has returned to this scene: a goat consoling a child who is home alone, waiting for her mother to return. “I can never get enough of this picture.”">
-        <img src="images/goat-and-child.png" alt="Painting of a child comforted by a goat, waiting at home">
-        <div class="art-caption"><strong>Waiting</strong>Watercolor & mixed media</div>
-      </div>
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Laughter larger"
+              data-full="images/web/art16.jpg"
+              data-title="Laughter"
+              data-medium="Acrylic on canvas"
+              data-desc="A woman caught mid-laugh, eyes closed, coral and pearl at her throat — a portrait about joy more than likeness.">
+        <img src="images/thumbs/art16.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Portrait of a laughing woman wearing red coral and white pearl necklaces">
+        <figcaption class="art-caption"><strong>Laughter</strong>Acrylic on canvas</figcaption>
+      </figure>
 
-      <div class="art-card" data-cat="still-life" onclick="openLightbox(this)"
-           data-full="images/poppies-sketchbook.png"
-           data-title="Poppies, Study"
-           data-desc="A sketchbook study of poppies, made while the artist was studying the work of painter Thomas Braun and his admiration for Monet. “His way of thinking about painting felt honest, generous, and perspective-shifting.”">
-        <img src="images/poppies-sketchbook.png" alt="Watercolor sketchbook study of red poppies">
-        <div class="art-caption"><strong>Poppies, Study</strong>Watercolor sketchbook</div>
-      </div>
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Waiting larger"
+              data-full="images/web/art6.jpg"
+              data-title="Waiting"
+              data-medium="Watercolour &amp; mixed media"
+              data-desc="The second time the artist has returned to this scene: a goat consoling a child who is home alone, waiting for her mother to return. “I can never get enough of this picture.”">
+        <img src="images/thumbs/art6.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Painting of a young child in a red dress comforted by a white goat in a doorway">
+        <figcaption class="art-caption"><strong>Waiting</strong>Watercolour &amp; mixed media</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Warmth larger"
+              data-full="images/web/art25.jpg"
+              data-title="Warmth"
+              data-medium="Acrylic on canvas"
+              data-desc="An elderly woman lifts a cup in both hands; the whole painting is held within one range of warm ochre and rose.">
+        <img src="images/thumbs/art25.jpg" width="1510" height="1545" loading="lazy" decoding="async" alt="Painting of an elderly woman with grey hair drinking from a cup held in both hands">
+        <figcaption class="art-caption"><strong>Warmth</strong>Acrylic on canvas</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Carrying Rhododendrons larger"
+              data-full="images/web/art9.jpg"
+              data-title="Carrying Rhododendrons"
+              data-medium="Acrylic on canvas"
+              data-desc="A girl steadies a doko basket heavy with lali gurans, caught mid-step on the walk home.">
+        <img src="images/thumbs/art9.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Painting of a girl carrying a woven basket filled with red rhododendron branches">
+        <figcaption class="art-caption"><strong>Carrying Rhododendrons</strong>Acrylic on canvas</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Butter Tea larger"
+              data-full="images/web/art4.jpg"
+              data-title="Butter Tea"
+              data-medium="Acrylic"
+              data-desc="An older man in saffron pauses over a bowl held in both hands — prayer beads, long hair, and a face weathered by altitude.">
+        <img src="images/thumbs/art4.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Acrylic portrait of an older man in an orange robe drinking from a bowl held in both hands">
+        <figcaption class="art-caption"><strong>Butter Tea</strong>Acrylic</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="landscape" tabindex="0" role="button" aria-label="View Sky on Fire larger"
+              data-full="images/web/art13.jpg"
+              data-title="Sky on Fire"
+              data-medium="Acrylic"
+              data-desc="A bare winter tree held against a sunset that fills the whole upper half of the paper.">
+        <img src="images/thumbs/art13.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Acrylic painting of a bare tree silhouetted against a fiery red and orange sunset over buildings">
+        <figcaption class="art-caption"><strong>Sky on Fire</strong>Acrylic</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View The Green Dress larger"
+              data-full="images/web/art17.jpg"
+              data-title="The Green Dress"
+              data-medium="Acrylic &amp; watercolour"
+              data-desc="Embroidery, mirrorwork and silver rendered thread by thread around a calm, direct gaze.">
+        <img src="images/thumbs/art17.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Portrait of a woman in an embroidered green and orange dress with silver jewellery and long braids">
+        <figcaption class="art-caption"><strong>The Green Dress</strong>Acrylic &amp; watercolour</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="landscape" tabindex="0" role="button" aria-label="View Home Below the Mountains larger"
+              data-full="images/web/art22.jpg"
+              data-title="Home Below the Mountains"
+              data-medium="Acrylic"
+              data-desc="A thatched house among banana palms, with the snow peaks standing over the valley behind it.">
+        <img src="images/thumbs/art22.jpg" width="1725" height="1102" loading="lazy" decoding="async" alt="Acrylic painting of a thatched Nepali house among green palms with snow mountains behind">
+        <figcaption class="art-caption"><strong>Home Below the Mountains</strong>Acrylic</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Winter Smile larger"
+              data-full="images/web/art2.jpg"
+              data-title="Winter Smile"
+              data-medium="Watercolour"
+              data-desc="A child grinning out from under a knitted cap, bundled in red against the snow and the open sky behind.">
+        <img src="images/thumbs/art2.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Watercolour portrait of a smiling child in a knitted hat and red clothing in a snowy landscape">
+        <figcaption class="art-caption"><strong>Winter Smile</strong>Watercolour</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="landscape" tabindex="0" role="button" aria-label="View Street at Dusk larger"
+              data-full="images/web/art7.jpg"
+              data-title="Street at Dusk"
+              data-medium="Watercolour"
+              data-desc="Tram wires strung across a European street as the evening sky turns coral above the rooftops.">
+        <img src="images/thumbs/art7.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Watercolour of a European city street with tram wires and coral clouds at sunset">
+        <figcaption class="art-caption"><strong>Street at Dusk</strong>Watercolour</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Adorned larger"
+              data-full="images/web/art8.jpg"
+              data-title="Adorned"
+              data-medium="Acrylic"
+              data-desc="A portrait built around silver — headdress, choker, and the steady, unblinking gaze beneath them.">
+        <img src="images/thumbs/art8.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Portrait of a woman wearing an ornate silver headdress and choker with dark curled hair">
+        <figcaption class="art-caption"><strong>Adorned</strong>Acrylic</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="landscape" tabindex="0" role="button" aria-label="View Milky Way larger"
+              data-full="images/web/art14.jpg"
+              data-title="Milky Way"
+              data-medium="Watercolour"
+              data-desc="Pines cut black against the galaxy, with the last of the sunset still glowing along the horizon.">
+        <img src="images/thumbs/art14.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Watercolour of the Milky Way over silhouetted pine trees with a pink horizon">
+        <figcaption class="art-caption"><strong>Milky Way</strong>Watercolour</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="still-life" tabindex="0" role="button" aria-label="View Tulips in a Glass larger"
+              data-full="images/web/art5.jpg"
+              data-title="Tulips in a Glass"
+              data-medium="Acrylic"
+              data-desc="Red tulips leaning out of a plain drinking glass, painted loosely against a wash of spring blue.">
+        <img src="images/thumbs/art5.jpg" width="1273" height="1800" loading="lazy" decoding="async" alt="Acrylic still life of red tulips in a clear glass against a blue background">
+        <figcaption class="art-caption"><strong>Tulips in a Glass</strong>Acrylic</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="landscape" tabindex="0" role="button" aria-label="View Red Roofs larger"
+              data-full="images/web/art18.jpg"
+              data-title="Red Roofs"
+              data-medium="Watercolour"
+              data-desc="Tiled rooftops climbing towards a green copper dome — an old European city seen from above.">
+        <img src="images/thumbs/art18.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Watercolour of red tiled rooftops and a green copper dome in an old European city">
+        <figcaption class="art-caption"><strong>Red Roofs</strong>Watercolour</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View In the Doorway larger"
+              data-full="images/web/art15.jpg"
+              data-title="In the Doorway"
+              data-medium="Pastel"
+              data-desc="Two figures pausing at a threshold, drawn in soft pastel on a sun-warmed ochre wall.">
+        <img src="images/thumbs/art15.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Pastel drawing of a man and a woman in a red headscarf standing beside a dark doorway">
+        <figcaption class="art-caption"><strong>In the Doorway</strong>Pastel</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="still-life" tabindex="0" role="button" aria-label="View Berries Against the Sky larger"
+              data-full="images/web/art23.jpg"
+              data-title="Berries Against the Sky"
+              data-medium="Acrylic"
+              data-desc="Looking straight up through a berry-laden branch into a clouded blue — painted from below.">
+        <img src="images/thumbs/art23.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Acrylic painting of red berries and green foliage against a blue and white sky">
+        <figcaption class="art-caption"><strong>Berries Against the Sky</strong>Acrylic</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="landscape" tabindex="0" role="button" aria-label="View Evening Sky II larger"
+              data-full="images/web/art11.jpg"
+              data-title="Evening Sky II"
+              data-medium="Watercolour"
+              data-desc="The same hour, painted again — banks of cloud catching fire above a low, darkening skyline.">
+        <img src="images/thumbs/art11.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Watercolour of red and orange sunset clouds above a dark rooftop skyline">
+        <figcaption class="art-caption"><strong>Evening Sky II</strong>Watercolour</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="still-life" tabindex="0" role="button" aria-label="View Poppies, Study larger"
+              data-full="images/web/art20.jpg"
+              data-title="Poppies, Study"
+              data-medium="Watercolour sketchbook"
+              data-desc="A sketchbook study of poppies, made while the artist was studying the work of painter Thomas Braun and his admiration for Monet. “His way of thinking about painting felt honest, generous, and perspective-shifting.”">
+        <img src="images/thumbs/art20.jpg" width="1178" height="1187" loading="lazy" decoding="async" alt="Watercolour sketchbook study of red poppies and seed heads">
+        <figcaption class="art-caption"><strong>Poppies, Study</strong>Watercolour sketchbook</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="landscape" tabindex="0" role="button" aria-label="View Corner House larger"
+              data-full="images/web/art12.jpg"
+              data-title="Corner House"
+              data-medium="Acrylic"
+              data-desc="An orange corner block under a big, moving sky — a quiet street painted from an upstairs window.">
+        <img src="images/thumbs/art12.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Acrylic painting of an orange corner building on a street beneath a cloudy blue sky">
+        <figcaption class="art-caption"><strong>Corner House</strong>Acrylic</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="still-life" tabindex="0" role="button" aria-label="View Two Pots larger"
+              data-full="images/web/art19.jpg"
+              data-title="Two Pots"
+              data-medium="Watercolour"
+              data-desc="Pansies and lavender sharing a blue bistro table, painted in a single quiet sitting.">
+        <img src="images/thumbs/art19.jpg" width="1114" height="1241" loading="lazy" decoding="async" alt="Watercolour of two terracotta pots of pansies and lavender on a blue garden table">
+        <figcaption class="art-caption"><strong>Two Pots</strong>Watercolour</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="landscape" tabindex="0" role="button" aria-label="View Evening Sky I larger"
+              data-full="images/web/art10.jpg"
+              data-title="Evening Sky I"
+              data-medium="Watercolour"
+              data-desc="A small study of dusk — lit windows appearing one by one beneath a sky still burning at the edges.">
+        <img src="images/thumbs/art10.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Small watercolour study of a city skyline at sunset with lit windows">
+        <figcaption class="art-caption"><strong>Evening Sky I</strong>Watercolour</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="still-life" tabindex="0" role="button" aria-label="View Wildflowers larger"
+              data-full="images/web/art24.jpg"
+              data-title="Wildflowers"
+              data-medium="Watercolour"
+              data-desc="A handful of garden flowers dropped into a coiled clay vase, loose and unfussed.">
+        <img src="images/thumbs/art24.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Watercolour of small wildflowers in a coiled pink clay vase">
+        <figcaption class="art-caption"><strong>Wildflowers</strong>Watercolour</figcaption>
+      </figure>
+
+      <figure class="art-card" data-cat="still-life" tabindex="0" role="button" aria-label="View Window Box larger"
+              data-full="images/web/art21.jpg"
+              data-title="Window Box"
+              data-medium="Watercolour"
+              data-desc="Dark pansies crowding a terracotta trough set into a cool stone window ledge.">
+        <img src="images/thumbs/art21.jpg" width="1122" height="1170" loading="lazy" decoding="async" alt="Watercolour of purple pansies in a terracotta window box on a stone ledge">
+        <figcaption class="art-caption"><strong>Window Box</strong>Watercolour</figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -494,51 +737,113 @@
   </div>
 </footer>
 
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
+  <button class="lb-btn lightbox-close" id="lb-close" aria-label="Close">&times;</button>
+  <button class="lb-btn lightbox-prev" id="lb-prev" aria-label="Previous artwork">&#8249;</button>
+  <button class="lb-btn lightbox-next" id="lb-next" aria-label="Next artwork">&#8250;</button>
   <div class="lightbox-content">
     <img id="lightbox-img" src="" alt="">
     <div class="lightbox-info">
       <strong id="lightbox-title"></strong>
+      <span class="medium" id="lightbox-medium"></span>
       <p id="lightbox-desc"></p>
     </div>
   </div>
+  <div class="lightbox-counter" id="lightbox-counter"></div>
 </div>
 
 <script>
+(function () {
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  function openLightbox(card) {
-    document.getElementById('lightbox-img').src = card.dataset.full;
-    document.getElementById('lightbox-title').textContent = card.dataset.title;
-    document.getElementById('lightbox-desc').textContent = card.dataset.desc;
-    document.getElementById('lightbox').classList.add('open');
+  var cards    = Array.prototype.slice.call(document.querySelectorAll('.art-card'));
+  var lightbox = document.getElementById('lightbox');
+  var lbImg    = document.getElementById('lightbox-img');
+  var current  = -1;
+  var lastFocus = null;
+
+  function visibleCards() {
+    return cards.filter(function (c) { return !c.classList.contains('hidden'); });
   }
-  function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('open');
+
+  function show(card) {
+    var list = visibleCards();
+    var i = list.indexOf(card);
+    if (i === -1) return;
+    current = i;
+    lbImg.src = card.dataset.full;
+    lbImg.alt = card.querySelector('img').alt;
+    document.getElementById('lightbox-title').textContent  = card.dataset.title;
+    document.getElementById('lightbox-medium').textContent = card.dataset.medium;
+    document.getElementById('lightbox-desc').textContent   = card.dataset.desc;
+    document.getElementById('lightbox-counter').textContent = (i + 1) + ' / ' + list.length;
   }
-  document.getElementById('lightbox').addEventListener('click', function(e) {
-    if (e.target === this) closeLightbox();
-  });
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeLightbox();
+
+  function open(card) {
+    lastFocus = document.activeElement;
+    show(card);
+    lightbox.classList.add('open');
+    document.body.classList.add('no-scroll');
+    document.getElementById('lb-close').focus();
+  }
+
+  function close() {
+    lightbox.classList.remove('open');
+    document.body.classList.remove('no-scroll');
+    lbImg.src = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  function step(delta) {
+    var list = visibleCards();
+    if (!list.length) return;
+    show(list[(current + delta + list.length) % list.length]);
+  }
+
+  cards.forEach(function (card) {
+    card.addEventListener('click', function () { open(card); });
+    card.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(card); }
+    });
   });
 
+  document.getElementById('lb-close').addEventListener('click', close);
+  document.getElementById('lb-prev').addEventListener('click', function (e) { e.stopPropagation(); step(-1); });
+  document.getElementById('lb-next').addEventListener('click', function (e) { e.stopPropagation(); step(1); });
+
+  lightbox.addEventListener('click', function (e) {
+    if (e.target === this || e.target.classList.contains('lightbox-content')) close();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') step(-1);
+    else if (e.key === 'ArrowRight') step(1);
+  });
+
+  // Swipe on touch devices
+  var touchX = null;
+  lightbox.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchend', function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 55) step(dx < 0 ? 1 : -1);
+    touchX = null;
+  }, { passive: true });
+
   // Gallery filter
-  document.querySelectorAll('.filter-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.filter-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
       btn.classList.add('active');
       var filter = btn.dataset.filter;
-      document.querySelectorAll('.art-card').forEach(function(card) {
-        if (filter === 'all' || card.dataset.cat === filter) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
+      cards.forEach(function (card) {
+        card.classList.toggle('hidden', !(filter === 'all' || card.dataset.cat === filter));
       });
     });
   });
+})();
 </script>
 
 </body>
