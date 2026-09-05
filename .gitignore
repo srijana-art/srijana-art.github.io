@@ -1,0 +1,7 @@
+# Full-resolution scans — kept locally, not pushed to GitHub.
+# The site serves the optimized JPEGs in images/thumbs/ and images/web/.
+images/png/
+images/old/
+
+.DS_Store
+**/.DS_Store
