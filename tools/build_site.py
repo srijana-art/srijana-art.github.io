@@ -1,132 +1,93 @@
 #!/usr/bin/env python3
-"""Builds every page of srijana-art.github.io from shared parts."""
-import os, html
+# -*- coding: utf-8 -*-
+"""
+Builds every page of srijana-art.github.io, in English and German.
+
+    python3 tools/build_site.py           # writes into build/
+    OUT=. python3 tools/build_site.py     # writes in place
+
+English pages live at the site root, German ones under de/. Each page declares
+its counterpart with hreflang so search engines treat them as one document in
+two languages rather than as duplicates.
+
+All copy lives in tools/lang_data.py — edit there, not in the generated HTML.
+"""
+import os, sys, html, json
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lang_data import ART, ORDER, S, PAGE_FILES
 
 OUT = os.environ.get("OUT", "build")
+SITE = "https://srijana-art.github.io/"
 EMAIL = "srijana.art.art.gallery@gmail.com"
 INSTA = "https://www.instagram.com/srijana.art.gallery/"
 ETSY = "https://www.etsy.com/shop/SrijanaArtGallery"
 KW_FEST = "https://www.markkleeberg.de/kunstwinkelfest"
 KW_AUCTION_HOUSE = "https://auktion.ikv-fester.de/"
+GO_LISTING = "https://rausgegangen.de/en/events/kunstmarkt-227/"
 
-# Set VIDEO to the basename once the encoded files exist in images/video/
-# (expects <name>.mp4 and <name>.jpg as the poster). None hides the section.
-VIDEO = None
+# Video: basename of images/video/<name>.mp4 and .jpg. None hides the section.
+VIDEO = "kunstwinkel"
 VIDEO_W, VIDEO_H = 1080, 1920
 
+EXHIBITED = {25: "kunstwinkel"}   # artwork id -> page key
+
+
 def esc(s):
-    return html.escape(s, quote=True)
-
-# ----------------------------------------------------------------- artwork data
-# (title, category, medium, description, alt, thumb_w, thumb_h)
-ART = {
- 1:  ("Carried", "portrait", "Watercolour",
-      "A painting close to the artist's heart — begun in Thailand and completed in Germany before travelling on to New Zealand for the start of a PhD. “I have carried this painting wherever I go, and each time I see it, it reminds me to keep practicing art.”",
-      "Watercolour portrait of a mother carrying her child on her back in a plaid woven wrap", 1275, 1800),
- 2:  ("Winter Smile", "portrait", "Watercolour",
-      "A child grinning out from under a knitted cap, bundled in red against the snow and the open sky behind.",
-      "Watercolour portrait of a smiling child in a knitted hat and red clothing in a snowy landscape", 1275, 1800),
- 3:  ("Honey Hunters of Nepal", "portrait", "Acrylic on 180gsm paper, A3",
-      "Begun in February 2022 and completed over a year and a half later, referenced from a documentary cover photo by a French journalist. “I was captivated by the intensity in their eyes, the fearless expression on their faces, and their unwavering courage.”",
-      "Painting of two honey hunters of Nepal on a rock, one standing with a pole and one crouching", 1275, 1800),
- 4:  ("Butter Tea", "portrait", "Acrylic",
-      "An older man in saffron pauses over a bowl held in both hands — prayer beads, long hair, and a face weathered by altitude.",
-      "Acrylic portrait of an older man in an orange robe drinking from a bowl held in both hands", 1275, 1800),
- 5:  ("Tulips in a Glass", "still-life", "Acrylic",
-      "Red tulips leaning out of a plain drinking glass, painted loosely against a wash of spring blue.",
-      "Acrylic still life of red tulips in a clear glass against a blue background", 1273, 1800),
- 6:  ("Waiting", "portrait", "Watercolour & mixed media",
-      "The second time the artist has returned to this scene: a goat consoling a child who is home alone, waiting for her mother to return. “I can never get enough of this picture.”",
-      "Painting of a young child in a red dress comforted by a white goat in a doorway", 1275, 1800),
- 7:  ("Street at Dusk", "landscape", "Watercolour",
-      "Tram wires strung across a European street as the evening sky turns coral above the rooftops.",
-      "Watercolour of a European city street with tram wires and coral clouds at sunset", 1275, 1800),
- 8:  ("Adorned", "portrait", "Acrylic",
-      "A portrait built around silver — headdress, choker, and the steady, unblinking gaze beneath them.",
-      "Portrait of a woman wearing an ornate silver headdress and choker with dark curled hair", 1275, 1800),
- 9:  ("Carrying Rhododendrons", "portrait", "Acrylic on canvas",
-      "A girl steadies a doko basket heavy with lali gurans, caught mid-step on the walk home.",
-      "Painting of a girl carrying a woven basket filled with red rhododendron branches", 1275, 1800),
- 10: ("Evening Sky I", "landscape", "Watercolour",
-      "A small study of dusk — lit windows appearing one by one beneath a sky still burning at the edges.",
-      "Small watercolour study of a city skyline at sunset with lit windows", 1275, 1800),
- 11: ("Evening Sky II", "landscape", "Watercolour",
-      "The same hour, painted again — banks of cloud catching fire above a low, darkening skyline.",
-      "Watercolour of red and orange sunset clouds above a dark rooftop skyline", 1275, 1800),
- 12: ("Corner House", "landscape", "Acrylic",
-      "An orange corner block under a big, moving sky — a quiet street painted from an upstairs window.",
-      "Acrylic painting of an orange corner building on a street beneath a cloudy blue sky", 1275, 1800),
- 13: ("Sky on Fire", "landscape", "Acrylic",
-      "A bare winter tree held against a sunset that fills the whole upper half of the paper.",
-      "Acrylic painting of a bare tree silhouetted against a fiery red and orange sunset over buildings", 1275, 1800),
- 14: ("Milky Way", "landscape", "Watercolour",
-      "Pines cut black against the galaxy, with the last of the sunset still glowing along the horizon.",
-      "Watercolour of the Milky Way over silhouetted pine trees with a pink horizon", 1275, 1800),
- 15: ("In the Doorway", "portrait", "Pastel",
-      "Two figures pausing at a threshold, drawn in soft pastel on a sun-warmed ochre wall.",
-      "Pastel drawing of a man and a woman in a red headscarf standing beside a dark doorway", 1275, 1800),
- 16: ("Laughter", "portrait", "Acrylic on canvas",
-      "A woman caught mid-laugh, eyes closed, coral and pearl at her throat — a portrait about joy more than likeness.",
-      "Portrait of a laughing woman wearing red coral and white pearl necklaces", 1275, 1800),
- 17: ("The Green Dress", "portrait", "Acrylic & watercolour",
-      "Embroidery, mirrorwork and silver rendered thread by thread around a calm, direct gaze.",
-      "Portrait of a woman in an embroidered green and orange dress with silver jewellery and long braids", 1275, 1800),
- 18: ("Red Roofs", "landscape", "Watercolour",
-      "Tiled rooftops climbing towards a green copper dome — an old European city seen from above.",
-      "Watercolour of red tiled rooftops and a green copper dome in an old European city", 1275, 1800),
- 19: ("Two Pots", "still-life", "Watercolour",
-      "Pansies and lavender sharing a blue bistro table, painted in a single quiet sitting.",
-      "Watercolour of two terracotta pots of pansies and lavender on a blue garden table", 1114, 1241),
- 20: ("Poppies, Study", "still-life", "Watercolour sketchbook",
-      "A sketchbook study of poppies, made while the artist was studying the work of painter Thomas Braun and his admiration for Monet. “His way of thinking about painting felt honest, generous, and perspective-shifting.”",
-      "Watercolour sketchbook study of red poppies and seed heads", 1178, 1187),
- 21: ("Window Box", "still-life", "Watercolour",
-      "Dark pansies crowding a terracotta trough set into a cool stone window ledge.",
-      "Watercolour of purple pansies in a terracotta window box on a stone ledge", 1122, 1170),
- 22: ("Home Below the Mountains", "landscape", "Acrylic",
-      "A thatched house among banana palms, with the snow peaks standing over the valley behind it.",
-      "Acrylic painting of a thatched Nepali house among green palms with snow mountains behind", 1725, 1102),
- 23: ("Berries Against the Sky", "still-life", "Acrylic",
-      "Looking straight up through a berry-laden branch into a clouded blue — painted from below.",
-      "Acrylic painting of red berries and green foliage against a blue and white sky", 1275, 1800),
- 24: ("Wildflowers", "still-life", "Watercolour",
-      "A handful of garden flowers dropped into a coiled clay vase, loose and unfussed.",
-      "Watercolour of small wildflowers in a coiled pink clay vase", 1275, 1800),
- 25: ("The Morning Pipe", "portrait", "Acrylic on canvas",
-      "An elderly woman draws on her pipe, both hands cupped around it, the whole painting held within one range of warm ochre and rose. This is the work now hanging in the open-air gallery at Am Kunstwinkel in Markkleeberg.",
-      "Painting of an elderly woman with grey hair smoking a pipe held in both cupped hands", 1510, 1545),
-}
-
-ORDER = [25, 3, 1, 16, 6, 9, 4, 13, 17, 22, 2, 7, 8, 14, 5, 18, 15, 23, 11, 20, 12, 19, 10, 24, 21]
-
-# Works currently on public exhibition -> badge text + link
-EXHIBITED = {25: ("On exhibition", "exhibition-kunstwinkel.html")}
-
-CAT_LABEL = {"portrait": "Portraits", "landscape": "Landscapes", "still-life": "Still Life"}
+    return html.escape(str(s), quote=True)
 
 
-# ----------------------------------------------------------------- page chrome
-def head(title, desc, rel_current, extra_head=""):
+class Ctx:
+    """Everything that differs between the two language trees."""
+
+    def __init__(self, lang):
+        self.lang = lang
+        self.t = S[lang]
+        # German pages sit one directory deeper, so assets need a ../ prefix
+        self.base = "" if lang == "en" else "../"
+
+    def page(self, key):
+        """Relative href to another page in the same language."""
+        en_file, de_file = PAGE_FILES[key]
+        return en_file if self.lang == "en" else de_file
+
+    def other(self, key):
+        """Relative href to this same page in the other language."""
+        en_file, de_file = PAGE_FILES[key]
+        return ("de/" + de_file) if self.lang == "en" else ("../" + en_file)
+
+    def asset(self, path):
+        return self.base + path
+
+
+# --------------------------------------------------------------------- chrome
+def head(c, key, title, desc, nav_current=""):
+    en_file, de_file = PAGE_FILES[key]
+    t = c.t
     return f"""<!DOCTYPE html>
-<html lang="en">
+<html lang="{t['html_lang']}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
+<link rel="alternate" hreflang="en" href="{SITE}{en_file}">
+<link rel="alternate" hreflang="de" href="{SITE}de/{de_file}">
+<link rel="alternate" hreflang="x-default" href="{SITE}{en_file}">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:type" content="website">
-<meta property="og:image" content="images/thumbs/art25.jpg">
+<meta property="og:locale" content="{'en_GB' if c.lang == 'en' else 'de_DE'}">
+<meta property="og:image" content="{SITE}images/thumbs/art25.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="{c.asset('css/site.css')}">
 <meta name="theme-color" content="#faf6f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
 <script>
 /* Applied before first paint so the page never flashes the wrong theme.
-   Explicit choice wins; otherwise follow the operating system. */
+   An explicit choice wins; otherwise follow the operating system. */
 (function () {{
   try {{
     var saved = localStorage.getItem('theme');
@@ -138,74 +99,85 @@ def head(title, desc, rel_current, extra_head=""):
   }}
 }})();
 </script>
-{extra_head}</head>
+</head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
-{nav(rel_current)}
+<a class="skip-link" href="#main">{esc(t['skip'])}</a>
+{nav(c, key, nav_current)}
 <main id="main">
 """
 
 
-def nav(current):
+def nav(c, key, current):
+    t = c.t
+    other_lang = 'de' if c.lang == 'en' else 'en'
+
     def cls(name):
         return ' class="current"' if current == name else ""
+
     return f"""<header class="site-nav">
   <div class="nav-inner">
-    <a class="brand" href="index.html" style="color:inherit;text-decoration:none">Srijana<span>.</span></a>
+    <a class="brand" href="{c.page('index')}">Srijana<span>.</span></a>
     <nav class="links">
-      <a href="index.html#about"{cls('about')}>About</a>
-      <a href="index.html#gallery"{cls('gallery')}>Gallery</a>
-      <a href="exhibitions.html"{cls('exhibitions')}>Exhibitions</a>
-      <a href="index.html#contact"{cls('contact')}>Contact</a>
+      <a href="{c.page('index')}#about"{cls('about')}>{esc(t['nav_about'])}</a>
+      <a href="{c.page('index')}#gallery"{cls('gallery')}>{esc(t['nav_gallery'])}</a>
+      <a href="{c.page('exhibitions')}"{cls('exhibitions')}>{esc(t['nav_exh'])}</a>
+      <a href="{c.page('index')}#contact"{cls('contact')}>{esc(t['nav_contact'])}</a>
     </nav>
-    <button class="theme-toggle" id="theme-toggle" type="button"
-              aria-label="Switch between light and dark mode" title="Switch between light and dark mode">
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
-           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-      </svg>
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
-           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="4.2"></circle>
-        <path d="M12 1.6v2.4M12 20v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M1.6 12h2.4M20 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"></path>
-      </svg>
-    </button>
+    <div class="nav-tools">
+      <a class="lang-switch" href="{c.other(key)}" hreflang="{other_lang}" lang="{other_lang}"
+         title="{esc(t['lang_switch_label'])}" aria-label="{esc(t['lang_switch_label'])}">{esc(t['lang_switch_text'])}</a>
+      <button class="theme-toggle" id="theme-toggle" type="button"
+              aria-label="{esc(t['theme_label'])}" title="{esc(t['theme_label'])}">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2"></circle>
+          <path d="M12 1.6v2.4M12 20v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M1.6 12h2.4M20 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"></path>
+        </svg>
+      </button>
+    </div>
   </div>
 </header>"""
 
 
-def contact_section():
+def contact_section(c):
+    t = c.t
+    subj = 'Painting%20enquiry' if c.lang == 'en' else 'Bildanfrage'
     return f"""
 <section id="contact">
   <div class="wrap">
     <div class="contact-box">
-      <h2>Commissions, prices &amp; enquiries</h2>
-      <p>Every painting on this site is an original, and most are available. Prices depend on size, medium and whether the piece is framed — write with the title you're interested in and you'll get a quote, usually within a couple of days.</p>
+      <h2>{t['contact_h']}</h2>
+      <p>{esc(t['contact_p'])}</p>
       <a class="contact-email" href="mailto:{EMAIL}">{EMAIL}</a>
       <div class="contact-links">
-        <a href="mailto:{EMAIL}?subject=Painting%20enquiry" class="btn btn-solid">Email Srijana</a>
+        <a href="mailto:{EMAIL}?subject={subj}" class="btn btn-solid">{esc(t['contact_btn'])}</a>
         <a href="{INSTA}" target="_blank" rel="noopener" class="btn btn-outline">@srijana.art.gallery</a>
-        <a href="{ETSY}" target="_blank" rel="noopener" class="btn btn-outline">Prints on Etsy</a>
+        <a href="{ETSY}" target="_blank" rel="noopener" class="btn btn-outline">{esc(t['contact_prints'])}</a>
       </div>
     </div>
   </div>
 </section>"""
 
 
-def footer(include_contact=True):
-    contact = contact_section() if include_contact else ""
+def footer(c, include_contact=True):
+    t = c.t
+    contact = contact_section(c) if include_contact else ""
     return f"""{contact}
 </main>
 <footer>
   <div class="wrap">
     <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="exhibitions.html">Exhibitions</a>
-      <a href="mailto:{EMAIL}">Email</a>
-      <a href="impressum.html">Impressum</a>
-      <a href="datenschutz.html">Datenschutz</a>
+      <a href="{c.page('index')}">{esc(t['foot_home'])}</a>
+      <a href="{c.page('exhibitions')}">{esc(t['foot_exh'])}</a>
+      <a href="mailto:{EMAIL}">{esc(t['foot_email'])}</a>
+      <a href="{c.page('impressum')}">Impressum</a>
+      <a href="{c.page('datenschutz')}">Datenschutz</a>
     </div>
-    &copy; <span id="year">2026</span> Srijana GS. All artwork shown remains the property of the artist.
+    &copy; <span id="year">2026</span> Srijana GS. {esc(t['foot_rights'])}
   </div>
 </footer>
 <script>
@@ -217,9 +189,7 @@ def footer(include_contact=True):
   if (!btn) return;
   var root = document.documentElement;
   function sync() {{
-    var dark = root.getAttribute('data-theme') === 'dark';
-    btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
-    btn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+    btn.setAttribute('aria-pressed', root.getAttribute('data-theme') === 'dark' ? 'true' : 'false');
   }}
   sync();
   btn.addEventListener('click', function () {{
@@ -244,12 +214,14 @@ def footer(include_contact=True):
 """
 
 
-def lightbox_markup():
-    return """
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
-  <button class="lb-btn lightbox-close" id="lb-close" aria-label="Close">&times;</button>
-  <button class="lb-btn lightbox-prev" id="lb-prev" aria-label="Previous artwork">&#8249;</button>
-  <button class="lb-btn lightbox-next" id="lb-next" aria-label="Next artwork">&#8250;</button>
+# ------------------------------------------------------------------ lightbox
+def lightbox_markup(c):
+    t = c.t
+    return f"""
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="{esc(t['viewer'])}">
+  <button class="lb-btn lightbox-close" id="lb-close" aria-label="{esc(t['lb_close'])}">&times;</button>
+  <button class="lb-btn lightbox-prev" id="lb-prev" aria-label="{esc(t['lb_prev'])}">&#8249;</button>
+  <button class="lb-btn lightbox-next" id="lb-next" aria-label="{esc(t['lb_next'])}">&#8250;</button>
   <div class="lightbox-content">
     <img id="lightbox-img" src="" alt="">
     <div class="lightbox-info">
@@ -257,8 +229,8 @@ def lightbox_markup():
       <span class="medium" id="lightbox-medium"></span>
       <p id="lightbox-desc"></p>
       <div class="lightbox-actions">
-        <a class="btn btn-solid" id="lb-enquire" href="#">Enquire about this piece</a>
-        <a class="btn btn-outline hidden" id="lb-exhibition" href="#">See it on exhibition</a>
+        <a class="btn btn-solid" id="lb-enquire" href="#">{esc(t['enquire'])}</a>
+        <a class="btn btn-outline hidden" id="lb-exhibition" href="#">{esc(t['see_exhibition'])}</a>
       </div>
     </div>
   </div>
@@ -267,10 +239,34 @@ def lightbox_markup():
 """
 
 
-GALLERY_JS = """
+MAIL_TEMPLATES = {
+    "en": {
+        "subject": 'Enquiry: "{t}"',
+        "body": ('Hello Srijana,\n\n'
+                 'I saw "{t}" ({m}) on your website and would like to know more.\n\n'
+                 'Could you tell me:\n'
+                 '  • the price\n'
+                 '  • the size, and whether it is framed\n'
+                 '  • whether it can be shipped, and roughly what that would cost\n\n'
+                 'Thank you,\n'),
+    },
+    "de": {
+        "subject": 'Anfrage: „{t}“',
+        "body": ('Hallo Srijana,\n\n'
+                 'ich habe „{t}“ ({m}) auf Ihrer Website gesehen und hätte gern mehr Informationen.\n\n'
+                 'Könnten Sie mir sagen:\n'
+                 '  • den Preis\n'
+                 '  • die Maße, und ob das Bild gerahmt ist\n'
+                 '  • ob ein Versand möglich ist und was er ungefähr kosten würde\n\n'
+                 'Vielen Dank,\n'),
+    },
+}
+
+GALLERY_JS = r"""
 <script>
 (function () {
   var EMAIL = '%EMAIL%';
+  var MAIL  = %MAIL%;   // language-specific enquiry template
   var cards    = Array.prototype.slice.call(document.querySelectorAll('.art-card'));
   var lightbox = document.getElementById('lightbox');
   if (!lightbox || !cards.length) return;
@@ -298,22 +294,12 @@ GALLERY_JS = """
     return cards.filter(function (c) { return !c.classList.contains('hidden'); });
   }
 
-  // Builds the prefilled enquiry email so the visitor never has to describe the piece.
+  // Prefilled enquiry email, so the visitor never faces a blank message.
   function mailtoFor(card) {
-    var title  = card.dataset.title;
-    var medium = card.dataset.medium;
-    var subject = 'Enquiry: "' + title + '"';
-    var body =
-      'Hello Srijana,\\n\\n' +
-      'I saw "' + title + '" (' + medium + ') on your website and would like to know more.\\n\\n' +
-      'Could you tell me:\\n' +
-      '  \\u2022 the price\\n' +
-      '  \\u2022 the size, and whether it is framed\\n' +
-      '  \\u2022 whether it can be shipped, and roughly what that would cost\\n\\n' +
-      'Thank you,\\n';
+    var title = card.dataset.title, medium = card.dataset.medium;
     return 'mailto:' + EMAIL +
-           '?subject=' + encodeURIComponent(subject) +
-           '&body='   + encodeURIComponent(body);
+      '?subject=' + encodeURIComponent(MAIL.subject.split('{t}').join(title)) +
+      '&body='    + encodeURIComponent(MAIL.body.split('{t}').join(title).split('{m}').join(medium));
   }
 
   function show(card) {
@@ -343,14 +329,12 @@ GALLERY_JS = """
     lockScroll();
     document.getElementById('lb-close').focus();
   }
-
   function close() {
     lightbox.classList.remove('open');
     unlockScroll();
     lbImg.src = '';
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
-
   function step(delta) {
     var list = visibleCards();
     if (!list.length) return;
@@ -371,7 +355,6 @@ GALLERY_JS = """
   lightbox.addEventListener('click', function (e) {
     if (e.target === this || e.target.classList.contains('lightbox-content')) close();
   });
-
   document.addEventListener('keydown', function (e) {
     if (!lightbox.classList.contains('open')) return;
     if (e.key === 'Escape') close();
@@ -401,307 +384,23 @@ GALLERY_JS = """
   });
 })();
 </script>
-""".replace('%EMAIL%', EMAIL)
+"""
 
 
-# ----------------------------------------------------------------- index page
-def gallery_cards():
-    out = []
-    for n in ORDER:
-        title, cat, medium, desc, alt, w, h = ART[n]
-        badge = ""
-        exh_attr = ""
-        if n in EXHIBITED:
-            label, link = EXHIBITED[n]
-            badge = f'\n        <span class="badge badge-exhibited">{esc(label)}</span>'
-            exh_attr = f'\n              data-exhibition="{esc(link)}"'
-        out.append(
-f'''      <figure class="art-card" data-cat="{cat}" tabindex="0" role="button" aria-label="View {esc(title)} larger"
-              data-full="images/web/art{n}.jpg"
-              data-title="{esc(title)}"
-              data-medium="{esc(medium)}"
-              data-desc="{esc(desc)}"{exh_attr}>{badge}
-        <img src="images/thumbs/art{n}.jpg" width="{w}" height="{h}" loading="lazy" decoding="async" alt="{esc(alt)}">
-        <figcaption class="art-caption"><strong>{esc(title)}</strong>{esc(medium)}</figcaption>
-      </figure>''')
-    return "\n\n".join(out)
+def gallery_js(c):
+    return (GALLERY_JS
+            .replace('%EMAIL%', EMAIL)
+            .replace('%MAIL%', json.dumps(MAIL_TEMPLATES[c.lang], ensure_ascii=False)))
 
 
-def counts():
-    c = {"portrait": 0, "landscape": 0, "still-life": 0}
-    for n in ORDER:
-        c[ART[n][1]] += 1
-    return c
-
-
-def film_section():
-    """The artist film. Rendered only when VIDEO points at real files."""
-    if not VIDEO:
-        return ""
-    return f"""
-<section class="film">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="kicker">In her own space</div>
-      <h2>A minute in the studio</h2>
-      <p>Filmed in Leipzig — the artist, and the painting she was working on.</p>
-    </div>
-    <div class="film-frame">
-      <video controls playsinline preload="none" width="{VIDEO_W}" height="{VIDEO_H}"
-             poster="images/video/{VIDEO}.jpg">
-        <source src="images/video/{VIDEO}.mp4" type="video/mp4">
-        <p style="color:#fff;padding:20px">Your browser can't play this video.
-           <a href="images/video/{VIDEO}.mp4">Download it instead</a>.</p>
-      </video>
-    </div>
-    <p class="film-caption">Srijana in the studio, September 2026.</p>
-  </div>
-</section>"""
-
-
-def build_index():
-    c = counts()
-    return head(
-        "Srijana GS — Artist",
-        "Original paintings by Srijana GS — portraits, landscapes and still life in acrylic and watercolour, made between Nepal and Leipzig. Works available; prices on request.",
-        "gallery",
-    ) + f"""
-<section class="hero">
-  <div class="wrap">
-    <div class="kicker">Painter · Leipzig, Germany</div>
-    <h1>Srijana GS</h1>
-    <p class="lede">Self-taught artist working in acrylic and watercolor — painting faces, memory, and quiet moments carried between Nepal, and every place life has taken her since.</p>
-    <div class="cta-row">
-      <a href="#gallery" class="btn btn-solid">View the gallery</a>
-      <a href="exhibitions.html" class="btn btn-outline">Where to see the work</a>
-    </div>
-  </div>
-</section>
-
-<section id="about">
-  <div class="wrap about-grid">
-    <div class="about-portrait">
-      <img src="images/web/art1.jpg" width="1275" height="1800" alt="Portrait painting by Srijana GS of a mother carrying her child in a traditional woven wrap">
-    </div>
-    <div class="about-text">
-      <div class="section-head" style="text-align:left; margin: 0 0 20px;">
-        <div class="kicker">About the artist</div>
-        <h2 style="margin-bottom: 0;">Painting as a way of looking closely</h2>
-      </div>
-      <p>Srijana is a self-taught artist who paints in acrylic, watercolor, and mixed media — portraits of people she encounters through photographs, memory, and travel, alongside landscapes and quiet still life studies of flowers she's grown or gathered along the way.</p>
-      <p>Her portraits often return to faces that carry a story: honey hunters from the mountains of Nepal, mothers carrying children through the cold, a child comforted by an animal while waiting for someone to come home. She's drawn to expressions that hold both hardship and quiet dignity.</p>
-      <div class="quote">"Painting has always served as my inner world — allowing me to dive in and sit with the characters I paint."</div>
-      <p>One painting travelled with her from Thailand to Germany, and on to New Zealand before a PhD — carried along not because it was finished, but because, as she puts it, finishing a piece can feel like its own quiet grief. She's currently based in Leipzig, Germany, still learning — most recently inspired by the work of painter Thomas Braun and a growing love for Impressionism.</p>
-      <div class="about-facts">
-        <div class="fact"><span class="num">25</span><span class="label">Works shown</span></div>
-        <div class="fact"><span class="num">Nepal → Leipzig</span><span class="label">Journey</span></div>
-        <div class="fact"><span class="num">Self-taught</span><span class="label">Practice</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="gallery" style="background: var(--paper-warm);">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="kicker">Selected work</div>
-      <h2>Gallery</h2>
-      <p>Twenty-five paintings — portraits, landscapes, and still life studies. Click any piece to see it larger.</p>
-    </div>
-
-    <div class="avail-note">
-      <strong>Most of these paintings are available.</strong> Prices aren't listed because they depend on size, medium and framing — open any piece and use <em>Enquire about this piece</em>, and Srijana will come back to you with a price. Prints of selected works are on <a href="{ETSY}" target="_blank" rel="noopener">Etsy</a>.
-    </div>
-
-    <div class="gallery-filter">
-      <button class="filter-btn active" data-filter="all">All <span class="count">{len(ORDER)}</span></button>
-      <button class="filter-btn" data-filter="portrait">Portraits <span class="count">{c['portrait']}</span></button>
-      <button class="filter-btn" data-filter="landscape">Landscapes <span class="count">{c['landscape']}</span></button>
-      <button class="filter-btn" data-filter="still-life">Still Life <span class="count">{c['still-life']}</span></button>
-    </div>
-
-    <div class="gallery-grid">
-{gallery_cards()}
-    </div>
-  </div>
-</section>
-
-""" + film_section() + f"""
-<section id="process" class="process">
-  <div class="wrap process-grid">
-    <div class="section-head" style="margin-bottom: 28px;">
-      <div class="kicker">In the studio</div>
-      <h2 style="margin-bottom: 0;">On finishing a painting</h2>
-    </div>
-    <div class="process-text">
-      <p>"There is this particular kind of sadness or grief wherever I finish a painting. It feels like the end of something — like the end of intimacy, closing the door, letting go."</p>
-      <p>"Maybe it's because I find the beauty in the process more than the final output — in the becoming, in the possibilities and uncertainty of an incomplete work."</p>
-      <p style="color: var(--ink); font-style: normal; font-size: 1rem;">— Srijana, from her studio in Leipzig</p>
-    </div>
-  </div>
-</section>
-""" + footer() + lightbox_markup() + GALLERY_JS + "\n</body>\n</html>\n"
-
-
-# ----------------------------------------------------------------- exhibitions
-def build_exhibitions():
-    return head(
-        "Exhibitions — Srijana GS",
-        "Where to see Srijana GS's paintings in person: the open-air gallery Am Kunstwinkel in Markkleeberg, and upcoming markets and exhibitions around Leipzig.",
-        "exhibitions",
-    ) + f"""
-<section class="event-hero">
-  <div class="wrap">
-    <div class="kicker">Exhibitions &amp; markets</div>
-    <h1>Where to see the work</h1>
-    <p class="lede">Paintings shown in public, past and upcoming. Some pieces travel; if you want to see a particular painting in person, just ask.</p>
-  </div>
-</section>
-
-<section style="padding-top: 20px;">
-  <div class="wrap">
-    <div class="exh-list">
-
-      <a class="exh-card" href="exhibition-garage-ost.html" style="text-decoration:none">
-        <img src="images/events/garage-ost.jpg" alt="Kunstmarkt at Garage Ost, Leipzig" loading="lazy">
-        <div class="body">
-          <span class="status-pill status-upcoming">Upcoming</span>
-          <div class="when">Saturday 12 September 2026 · 13:00–16:00</div>
-          <h3>Kunstmarkt, Garage Ost</h3>
-          <p>A table of her own at the Kunstmarkt in Garage Ost — originals, studies and prints, and the chance to talk to her about a commission in person.</p>
-          <span class="go">Event details →</span>
-        </div>
-      </a>
-
-      <a class="exh-card" href="exhibition-kunstwinkel.html" style="text-decoration:none">
-        <img src="images/events/kw-board-sm.jpg" alt="The Am Kunstwinkel open-air gallery wall in Markkleeberg" loading="lazy">
-        <div class="body">
-          <span class="status-pill status-live">On show until 2027</span>
-          <div class="when">From 5 September 2026 · Markkleeberg</div>
-          <h3>Am Kunstwinkel — “Mein Bild für Dich”</h3>
-          <p>“The Morning Pipe” was selected as one of 24 works for the open-air gallery wall in Markkleeberg. It hangs there for a year, then goes to auction.</p>
-          <span class="go">Event details &amp; bidding →</span>
-        </div>
-      </a>
-
-    </div>
-
-    <div class="callout" style="margin-top: 44px;">
-      <p><strong>Organising something?</strong> Srijana is open to markets, group shows and café or practice exhibitions in and around Leipzig. Write to <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
-    </div>
-  </div>
-</section>
-""" + footer(include_contact=False) + "\n</body>\n</html>\n"
-
-
-# ----------------------------------------------------------------- Kunstwinkel
-def build_kunstwinkel():
-    photos = [
-        ("kw-board", "The open-air gallery wall at Am Kunstwinkel, Markkleeberg, with the 24 newly unveiled works"),
-        ("kw-artist-wall", "Srijana in front of the Kunstwinkel wall on the day of the unveiling"),
-        ("kw-panel-detail", "Close view of the wall showing “The Morning Pipe” among the neighbouring works"),
-        ("kw-crowd", "Visitors gathered in front of the Kunstwinkel wall during the Kunstwinkelfest"),
-        ("kw-artist", "Srijana at the Kunstwinkelfest"),
-        ("kw-board-angle", "The gallery wall seen from the side, with the painted lake mural below"),
-        ("kw-crowd-close", "The crowd looking up at the newly unveiled collection"),
-        ("kw-artist-full", "Srijana beneath the Am Kunstwinkel lettering"),
-    ]
-    strip = "\n".join(
-        f'''      <figure><img src="images/events/{n}-sm.jpg" data-full="images/events/{n}.jpg" loading="lazy" decoding="async" alt="{esc(a)}"></figure>'''
-        for n, a in photos)
-
-    return head(
-        "Am Kunstwinkel, Markkleeberg 2026/27 — Srijana GS",
-        "“The Morning Pipe” by Srijana GS is one of 24 works in the open-air gallery Am Kunstwinkel in Markkleeberg, on show until 2027 and then auctioned.",
-        "exhibitions",
-    ) + f"""
-<section class="event-hero">
-  <div class="wrap">
-    <div class="breadcrumb"><a href="index.html">Home</a> · <a href="exhibitions.html">Exhibitions</a></div>
-    <span class="status-pill status-live">On show until autumn 2027</span>
-    <h1>Am Kunstwinkel, Markkleeberg</h1>
-    <p class="lede">“The Morning Pipe” was selected as one of 24 works for the 2026/27 open-air gallery on the Kunstwinkel wall, under the motto <em>“Mein Bild für Dich”</em>. It was unveiled at the 8th Kunstwinkelfest on 5 September 2026 and hangs there for a full year.</p>
-  </div>
-</section>
-
-<section style="padding-top: 30px;">
-  <div class="wrap event-grid">
-
-    <div>
-      <div class="featured-work">
-        <img src="images/web/art25.jpg" alt="{esc(ART[25][4])}" loading="lazy">
-        <div class="body">
-          <h3>The Morning Pipe</h3>
-          <span class="medium">{esc(ART[25][2])}</span>
-          <p>An elderly woman draws on her pipe, both hands cupped around it. The whole painting is held within one narrow range of warm ochre and rose — the light doing the work that colour usually does.</p>
-          <a class="btn btn-outline" href="index.html#gallery">See it in the gallery</a>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <h2 style="margin-top:0;">How this one works</h2>
-      <p style="color: var(--ink-soft);">The Kunstwinkel is a permanent open-air gallery on a house wall at Rathausstraße 23 in Markkleeberg. Each year the town selects 24 works from submitted artists, mounts them on the wall for twelve months, and then auctions them at the following year's Kunstwinkelfest — with the proceeds going to the artists and the project.</p>
-
-      <table class="facts-table">
-        <tr><th>Exhibition</th><td>Am Kunstwinkel — open-air gallery, 2026/27 collection</td></tr>
-        <tr><th>Motto</th><td>“Mein Bild für Dich”</td></tr>
-        <tr><th>Work shown</th><td>The Morning Pipe</td></tr>
-        <tr><th>Unveiled</th><td>5 September 2026, at the 8th Kunstwinkelfest</td></tr>
-        <tr><th>On show until</th><td>Kunstwinkelfest 2027</td></tr>
-        <tr><th>Where</th><td>Rathausstraße 23, 04416 Markkleeberg</td></tr>
-        <tr><th>Selected works</th><td>24, by 24 different artists</td></tr>
-        <tr><th>Organiser</th><td><a href="{KW_FEST}" target="_blank" rel="noopener">Stadt Markkleeberg</a></td></tr>
-      </table>
-
-      <div class="callout">
-        <p><strong>Bidding is not open yet.</strong> The 2026/27 collection — the one this painting belongs to — goes to auction at the Kunstwinkelfest in September 2027. The town publishes an online catalogue a few weeks beforehand, run by the auction house IKV Fester, where bids can be placed in advance of the live auction.</p>
-        <p>This page will carry the direct bidding link as soon as the town publishes it. Until then:</p>
-        <p>
-          <a class="btn btn-outline" href="{KW_FEST}" target="_blank" rel="noopener">Kunstwinkelfest page</a>
-          <a class="btn btn-outline" href="{KW_AUCTION_HOUSE}" target="_blank" rel="noopener">Auction house</a>
-        </p>
-        <!-- TODO 2027: replace the two buttons above with the direct lot URL, e.g.
-             <a class="btn btn-solid" href="https://auktion.ikv-fester.de/...">Place a bid on this painting</a> -->
-      </div>
-
-      <p style="color: var(--ink-soft);">If you'd rather not wait for the auction, Srijana has other originals available directly — <a href="index.html#gallery">see the gallery</a> or <a href="mailto:{EMAIL}?subject=Painting%20enquiry">write to her</a>.</p>
-    </div>
-
-  </div>
-</section>
-
-<section style="background: var(--paper-warm);">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="kicker">5 September 2026</div>
-      <h2>The unveiling</h2>
-      <p>The 8th Kunstwinkelfest, when the new collection went up on the wall.</p>
-    </div>
-    <div class="photo-strip" id="photo-strip">
-{strip}
-    </div>
-  </div>
-</section>
-""" + footer(include_contact=False) + """
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
-  <button class="lb-btn lightbox-close" id="lb-close" aria-label="Close">&times;</button>
-  <button class="lb-btn lightbox-prev" id="lb-prev" aria-label="Previous photo">&#8249;</button>
-  <button class="lb-btn lightbox-next" id="lb-next" aria-label="Next photo">&#8250;</button>
-  <div class="lightbox-content">
-    <img id="lightbox-img" src="" alt="">
-    <div class="lightbox-info"><p id="lightbox-desc"></p></div>
-  </div>
-  <div class="lightbox-counter" id="lightbox-counter"></div>
-</div>
+PHOTO_JS = r"""
 <script>
 (function () {
   var figs = Array.prototype.slice.call(document.querySelectorAll('#photo-strip figure'));
   var lb = document.getElementById('lightbox');
   if (!lb || !figs.length) return;
   var img = document.getElementById('lightbox-img'), i = -1, lastFocus = null;
-  // iOS Safari does not honour overflow:hidden on <body>, so the page is
-  // pinned with position:fixed and the scroll position restored on close.
+
   var scrollY = 0;
   function lockScroll() {
     scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
@@ -713,6 +412,7 @@ def build_kunstwinkel():
     document.body.style.top = '';
     window.scrollTo(0, scrollY);
   }
+
   function show(n) {
     i = (n + figs.length) % figs.length;
     var el = figs[i].querySelector('img');
@@ -724,6 +424,7 @@ def build_kunstwinkel():
                      lockScroll(); document.getElementById('lb-close').focus(); }
   function close() { lb.classList.remove('open'); unlockScroll();
                      img.src = ''; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
+
   figs.forEach(function (f, n) {
     f.setAttribute('tabindex', '0'); f.setAttribute('role', 'button');
     f.addEventListener('click', function () { open(n); });
@@ -745,24 +446,225 @@ def build_kunstwinkel():
   });
 })();
 </script>
-</body>
-</html>
 """
 
 
-# ----------------------------------------------------------------- Garage Ost
-def build_garage_ost():
-    return head(
-        "Kunstmarkt, Garage Ost Leipzig — Srijana GS",
-        "Srijana GS shows and sells original paintings at her own table at the Kunstmarkt in Garage Ost, Leipzig — Saturday 12 September 2026, 13:00–16:00.",
-        "exhibitions",
-    ) + f"""
+# ----------------------------------------------------------------- index page
+def gallery_cards(c):
+    out = []
+    for n in ORDER:
+        a = ART[n]
+        title, medium, desc, alt = a[c.lang]
+        badge = exh_attr = ""
+        if n in EXHIBITED:
+            badge = f'\n        <span class="badge badge-exhibited">{esc(c.t["badge_exhibited"])}</span>'
+            exh_attr = f'\n              data-exhibition="{esc(c.page(EXHIBITED[n]))}"'
+        out.append(
+f'''      <figure class="art-card" data-cat="{a['cat']}" tabindex="0" role="button"
+              aria-label="{esc(c.t['view_larger'].replace('{t}', title))}"
+              data-full="{c.asset(f'images/web/art{n}.jpg')}"
+              data-title="{esc(title)}"
+              data-medium="{esc(medium)}"
+              data-desc="{esc(desc)}"{exh_attr}>{badge}
+        <img src="{c.asset(f'images/thumbs/art{n}.jpg')}" width="{a['w']}" height="{a['h']}"
+             loading="lazy" decoding="async" alt="{esc(alt)}">
+        <figcaption class="art-caption"><strong>{esc(title)}</strong>{esc(medium)}</figcaption>
+      </figure>''')
+    return "\n\n".join(out)
+
+
+def counts():
+    c = {"portrait": 0, "landscape": 0, "still-life": 0}
+    for n in ORDER:
+        c[ART[n]["cat"]] += 1
+    return c
+
+
+def build_index(c):
+    t, n = c.t, counts()
+    filters = [f'<button class="filter-btn active" data-filter="all">{esc(t["filter_all"])} '
+               f'<span class="count">{len(ORDER)}</span></button>']
+    for cat in ("portrait", "landscape", "still-life"):
+        filters.append(f'<button class="filter-btn" data-filter="{cat}">{esc(t["cat"][cat])} '
+                       f'<span class="count">{n[cat]}</span></button>')
+
+    return head(c, "index", t["meta_title"], t["meta_desc"], "gallery") + f"""
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker">{esc(t['hero_kicker'])}</div>
+    <h1>Srijana GS</h1>
+    <p class="lede">{esc(t['hero_lede'])}</p>
+    <div class="cta-row">
+      <a href="#gallery" class="btn btn-solid">{esc(t['hero_cta1'])}</a>
+      <a href="{c.page('exhibitions')}" class="btn btn-outline">{esc(t['hero_cta2'])}</a>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div class="about-portrait">
+      <img src="{c.asset('images/web/art1.jpg')}" width="1275" height="1800" alt="{esc(ART[1][c.lang][3])}">
+    </div>
+    <div class="about-text">
+      <div class="section-head" style="text-align:left; margin: 0 0 20px;">
+        <div class="kicker">{esc(t['about_kicker'])}</div>
+        <h2 style="margin-bottom: 0;">{esc(t['about_h'])}</h2>
+      </div>
+      <p>{esc(t['about_p1'])}</p>
+      <p>{esc(t['about_p2'])}</p>
+      <div class="quote">{esc(t['about_quote'])}</div>
+      <p>{esc(t['about_p3'])}</p>
+      <div class="about-facts">
+        <div class="fact"><span class="num">{len(ORDER)}</span><span class="label">{esc(t['fact1'])}</span></div>
+        <div class="fact"><span class="num">{esc(t['fact2_n'])}</span><span class="label">{esc(t['fact2'])}</span></div>
+        <div class="fact"><span class="num">{esc(t['fact3_n'])}</span><span class="label">{esc(t['fact3'])}</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery" style="background: var(--paper-warm);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">{esc(t['gal_kicker'])}</div>
+      <h2>{esc(t['gal_h'])}</h2>
+      <p>{esc(t['gal_p'])}</p>
+    </div>
+
+    <div class="avail-note">{t['avail'].format(etsy=ETSY)}</div>
+
+    <div class="gallery-filter">
+      {chr(10).join('      ' + f for f in filters).strip()}
+    </div>
+
+    <div class="gallery-grid">
+{gallery_cards(c)}
+    </div>
+  </div>
+</section>
+{film_section(c)}
+<section id="process" class="process">
+  <div class="wrap process-grid">
+    <div class="section-head" style="margin-bottom: 28px;">
+      <div class="kicker">{esc(t['proc_kicker'])}</div>
+      <h2 style="margin-bottom: 0;">{esc(t['proc_h'])}</h2>
+    </div>
+    <div class="process-text">
+      <p>{esc(t['proc_q1'])}</p>
+      <p>{esc(t['proc_q2'])}</p>
+      <p style="color: var(--ink); font-style: normal; font-size: 1rem;">{esc(t['proc_sig'])}</p>
+    </div>
+  </div>
+</section>
+""" + footer(c) + lightbox_markup(c) + gallery_js(c) + "\n</body>\n</html>\n"
+
+
+def film_section(c):
+    """Only rendered on the Kunstwinkel page; kept here for the index if wanted."""
+    return ""
+
+
+# ------------------------------------------------------------------ exhibitions
+def build_exhibitions(c):
+    t = c.t
+    return head(c, "exhibitions", t["exh_title"], t["exh_desc"], "exhibitions") + f"""
 <section class="event-hero">
   <div class="wrap">
-    <div class="breadcrumb"><a href="index.html">Home</a> · <a href="exhibitions.html">Exhibitions</a></div>
-    <span class="status-pill status-upcoming">Upcoming</span>
-    <h1>Kunstmarkt at Garage Ost</h1>
-    <p class="lede">One afternoon in Leipzig with the originals on the table — the paintings from this website, some studies that never made it online, and the chance to talk about a commission face to face.</p>
+    <div class="kicker">{t['exh_kicker']}</div>
+    <h1>{esc(t['exh_h'])}</h1>
+    <p class="lede">{esc(t['exh_lede'])}</p>
+  </div>
+</section>
+
+<section style="padding-top: 20px;">
+  <div class="wrap">
+    <div class="exh-list">
+
+      <a class="exh-card" href="{c.page('garageost')}" style="text-decoration:none">
+        <img src="{c.asset('images/events/garage-ost.jpg')}" alt="{esc(ART[22][c.lang][3])}" loading="lazy">
+        <div class="body">
+          <span class="status-pill status-upcoming">{esc(t['pill_up'])}</span>
+          <div class="when">{esc(t['card_go_when'])}</div>
+          <h3>{esc(t['card_go_h'])}</h3>
+          <p>{esc(t['card_go_p'])}</p>
+          <span class="go">{t['go_details']}</span>
+        </div>
+      </a>
+
+      <a class="exh-card" href="{c.page('kunstwinkel')}" style="text-decoration:none">
+        <img src="{c.asset('images/events/kw-board-sm.jpg')}" alt="{esc(t['kw_alt_board'])}" loading="lazy">
+        <div class="body">
+          <span class="status-pill status-live">{esc(t['pill_live'])}</span>
+          <div class="when">{esc(t['card_kw_when'])}</div>
+          <h3>{esc(t['card_kw_h'])}</h3>
+          <p>{esc(t['card_kw_p'])}</p>
+          <span class="go">{t['go_details_bid']}</span>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="callout" style="margin-top: 44px;">
+      <p>{t['exh_cta'].format(email=EMAIL)}</p>
+    </div>
+  </div>
+</section>
+""" + footer(c, include_contact=False) + "\n</body>\n</html>\n"
+
+
+# ------------------------------------------------------------------ Kunstwinkel
+def film_block(c):
+    """The artist film. Rendered only when VIDEO points at real files."""
+    if not VIDEO:
+        return ""
+    t = c.t
+    return f"""
+<section class="film">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">{esc(t['kw_film_kicker'])}</div>
+      <h2>{esc(t['kw_film_h'])}</h2>
+      <p>{esc(t['kw_film_p'])}</p>
+    </div>
+    <div class="film-frame">
+      <video controls playsinline preload="none" width="{VIDEO_W}" height="{VIDEO_H}"
+             poster="{c.asset(f'images/video/{VIDEO}.jpg')}">
+        <source src="{c.asset(f'images/video/{VIDEO}.mp4')}" type="video/mp4">
+        <p>{esc(t['kw_film_fallback'])}
+           <a href="{c.asset(f'images/video/{VIDEO}.mp4')}">{esc(t['kw_film_download'])}</a>.</p>
+      </video>
+    </div>
+    <p class="film-caption">{esc(t['kw_film_cap'])}</p>
+  </div>
+</section>"""
+
+
+def build_kunstwinkel(c):
+    t = c.t
+    photos = [("kw-board", t['kw_alt_board']),
+              ("kw-artist-wall", t['kw_alt_artist_wall']),
+              ("kw-panel-detail", t['kw_alt_detail']),
+              ("kw-crowd", t['kw_alt_crowd']),
+              ("kw-artist", t['kw_alt_artist']),
+              ("kw-board-angle", t['kw_alt_angle']),
+              ("kw-crowd-close", t['kw_alt_crowd_close']),
+              ("kw-artist-full", t['kw_alt_artist_full'])]
+    strip = "\n".join(
+        f'''      <figure><img src="{c.asset(f'images/events/{n}-sm.jpg')}" '''
+        f'''data-full="{c.asset(f'images/events/{n}.jpg')}" '''
+        f'''loading="lazy" decoding="async" alt="{esc(a)}"></figure>'''
+        for n, a in photos)
+
+    art_title, art_medium, _, art_alt = ART[25][c.lang]
+
+    return head(c, "kunstwinkel", t["kw_title"], t["kw_desc"], "exhibitions") + f"""
+<section class="event-hero">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="{c.page('index')}">{esc(t['breadcrumb_home'])}</a> · <a href="{c.page('exhibitions')}">{esc(t['nav_exh'])}</a></div>
+    <span class="status-pill status-live">{esc(t['kw_pill'])}</span>
+    <h1>{esc(t['kw_h'])}</h1>
+    <p class="lede">{t['kw_lede']}</p>
   </div>
 </section>
 
@@ -770,66 +672,157 @@ def build_garage_ost():
   <div class="wrap event-grid">
 
     <div>
-      <h2 style="margin-top:0;">Come and say hello</h2>
-      <p style="color: var(--ink-soft);">Srijana will have her own table, showing original paintings and smaller works on paper. Everything on the table is for sale, and there is no obligation at all — it's just as good a reason to come and look closely at the brushwork, ask how a piece was made, or talk about a portrait of someone in your own family.</p>
-      <p style="color: var(--ink-soft);">If there's a particular painting from the <a href="index.html#gallery">gallery</a> you'd like to see in person, <a href="mailto:{EMAIL}?subject=Garage%20Ost%20-%20can%20you%20bring%20a%20painting%3F">send a message beforehand</a> and she'll bring it along.</p>
+      <div class="featured-work">
+        <img src="{c.asset('images/web/art25.jpg')}" alt="{esc(art_alt)}" loading="lazy">
+        <div class="body">
+          <h3>{esc(art_title)}</h3>
+          <span class="medium">{esc(art_medium)}</span>
+          <p>{esc(t['kw_work_p'])}</p>
+          <a class="btn btn-outline" href="{c.page('index')}#gallery">{esc(t['kw_see_gallery'])}</a>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2 style="margin-top:0;">{esc(t['kw_how_h'])}</h2>
+      <p style="color: var(--ink-soft);">{esc(t['kw_how_p'])}</p>
 
       <table class="facts-table">
-        <tr><th>Event</th><td>Kunstmarkt — Srijana's table: original paintings, studies and prints</td></tr>
-        <tr><th>Date</th><td>Saturday, 12 September 2026</td></tr>
-        <tr><th>Time</th><td>13:00 – 16:00</td></tr>
-        <tr><th>Venue</th><td>Garage Ost</td></tr>
-        <tr><th>Address</th><td>Hermann-Liebmann-Straße 65–67, 04315 Leipzig</td></tr>
-        <tr><th>Entry</th><td>Free</td></tr>
-        <tr><th>Payment</th><td>Cash, or bank transfer by arrangement</td></tr>
+        <tr><th>{esc(t['kw_f_exh'])}</th><td>{esc(t['kw_f_exh_v'])}</td></tr>
+        <tr><th>{esc(t['kw_f_motto'])}</th><td>&bdquo;Mein Bild f&uuml;r Dich&ldquo;</td></tr>
+        <tr><th>{esc(t['kw_f_work'])}</th><td>{esc(art_title)}</td></tr>
+        <tr><th>{esc(t['kw_f_unveiled'])}</th><td>{esc(t['kw_f_unveiled_v'])}</td></tr>
+        <tr><th>{esc(t['kw_f_until'])}</th><td>{esc(t['kw_f_until_v'])}</td></tr>
+        <tr><th>{esc(t['kw_f_where'])}</th><td>Rathausstra&szlig;e 23, 04416 Markkleeberg</td></tr>
+        <tr><th>{esc(t['kw_f_selected'])}</th><td>{esc(t['kw_f_selected_v'])}</td></tr>
+        <tr><th>{esc(t['kw_f_org'])}</th><td><a href="{KW_FEST}" target="_blank" rel="noopener">{esc(t['kw_f_org_v'])}</a></td></tr>
+      </table>
+
+      <div class="callout">
+        <p><strong>{esc(t['kw_bid_h'])}</strong> {esc(t['kw_bid_p1'])}</p>
+        <p>{esc(t['kw_bid_p2'])}</p>
+        <p>
+          <a class="btn btn-outline" href="{KW_FEST}" target="_blank" rel="noopener">{esc(t['kw_bid_b1'])}</a>
+          <a class="btn btn-outline" href="{KW_AUCTION_HOUSE}" target="_blank" rel="noopener">{esc(t['kw_bid_b2'])}</a>
+        </p>
+        <!-- TODO 2027: replace the two buttons above with the direct lot URL, e.g.
+             <a class="btn btn-solid" href="https://auktion.ikv-fester.de/...">Place a bid on this painting</a> -->
+      </div>
+
+      <p style="color: var(--ink-soft);">{t['kw_alt_p'].format(gallery=c.page('index'), email=EMAIL)}</p>
+    </div>
+
+  </div>
+</section>
+{film_block(c)}
+<section style="background: var(--paper-warm);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">{esc(t['kw_film_kicker'])}</div>
+      <h2>{esc(t['kw_photos_h'])}</h2>
+      <p>{esc(t['kw_photos_p'])}</p>
+    </div>
+    <div class="photo-strip" id="photo-strip">
+{strip}
+    </div>
+  </div>
+</section>
+""" + footer(c, include_contact=False) + f"""
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="{esc(t['photo_viewer'])}">
+  <button class="lb-btn lightbox-close" id="lb-close" aria-label="{esc(t['lb_close'])}">&times;</button>
+  <button class="lb-btn lightbox-prev" id="lb-prev" aria-label="{esc(t['lb_photo_prev'])}">&#8249;</button>
+  <button class="lb-btn lightbox-next" id="lb-next" aria-label="{esc(t['lb_photo_next'])}">&#8250;</button>
+  <div class="lightbox-content">
+    <img id="lightbox-img" src="" alt="">
+    <div class="lightbox-info"><p id="lightbox-desc"></p></div>
+  </div>
+  <div class="lightbox-counter" id="lightbox-counter"></div>
+</div>
+""" + PHOTO_JS + "\n</body>\n</html>\n"
+
+
+# ------------------------------------------------------------------ Garage Ost
+def build_garage_ost(c):
+    t = c.t
+    return head(c, "garageost", t["go_title"], t["go_desc"], "exhibitions") + f"""
+<section class="event-hero">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="{c.page('index')}">{esc(t['breadcrumb_home'])}</a> · <a href="{c.page('exhibitions')}">{esc(t['nav_exh'])}</a></div>
+    <span class="status-pill status-upcoming">{esc(t['pill_up'])}</span>
+    <h1>{esc(t['go_h'])}</h1>
+    <p class="lede">{esc(t['go_lede'])}</p>
+  </div>
+</section>
+
+<section style="padding-top: 30px;">
+  <div class="wrap event-grid">
+
+    <div>
+      <h2 style="margin-top:0;">{esc(t['go_come_h'])}</h2>
+      <p style="color: var(--ink-soft);">{esc(t['go_p1'])}</p>
+      <p style="color: var(--ink-soft);">{t['go_p2'].format(gallery=c.page('index'), email=EMAIL)}</p>
+
+      <table class="facts-table">
+        <tr><th>{esc(t['go_f_event'])}</th><td>{esc(t['go_f_event_v'])}</td></tr>
+        <tr><th>{esc(t['go_f_date'])}</th><td>{esc(t['go_f_date_v'])}</td></tr>
+        <tr><th>{esc(t['go_f_time'])}</th><td>{esc(t['go_f_time_v'])}</td></tr>
+        <tr><th>{esc(t['go_f_venue'])}</th><td>Garage Ost</td></tr>
+        <tr><th>{esc(t['go_f_addr'])}</th><td>{esc(t['go_f_addr_v'])}</td></tr>
+        <tr><th>{esc(t['go_f_entry'])}</th><td>{esc(t['go_f_entry_v'])}</td></tr>
+        <tr><th>{esc(t['go_f_pay'])}</th><td>{esc(t['go_f_pay_v'])}</td></tr>
       </table>
 
       <!-- TODO before publishing:
-           - confirm the date/time against https://rausgegangen.de/en/events/kunstmarkt-227/
+           - confirm the date/time against the rausgegangen.de listing
            - swap images/events/garage-ost.jpg for the organiser's own event image
              (only if they allow reuse) or a photo of her table after the event -->
 
       <div class="callout">
-        <p><strong>Date still to be confirmed.</strong> The venue is fixed; the exact date and time will be pinned to the organiser's listing. Follow <a href="{INSTA}" target="_blank" rel="noopener">@srijana.art.gallery</a> for the final details, or <a href="mailto:{EMAIL}?subject=Garage%20Ost%20details">ask by email</a>. The organiser's listing is on <a href="https://rausgegangen.de/en/events/kunstmarkt-227/" target="_blank" rel="noopener">rausgegangen.de</a>.</p>
+        <p>{t['go_note'].format(insta=INSTA, email=EMAIL, listing=GO_LISTING)}</p>
       </div>
     </div>
 
     <div>
       <div class="featured-work">
-        <img src="images/web/art16.jpg" alt="{esc(ART[16][4])}" loading="lazy">
+        <img src="{c.asset('images/web/art16.jpg')}" alt="{esc(ART[16][c.lang][3])}" loading="lazy">
         <div class="body">
-          <h3>What's likely to be on the table</h3>
-          <span class="medium">Originals · studies · prints</span>
-          <p>A mix of the portraits and the smaller watercolour studies — the sketchbook pieces are the easiest place to start a collection, and the large acrylic portraits are the ones people tend to stand in front of longest.</p>
-          <a class="btn btn-outline" href="index.html#gallery">Browse the gallery first</a>
+          <h3>{esc(t['go_table_h'])}</h3>
+          <span class="medium">{esc(t['go_table_medium'])}</span>
+          <p>{esc(t['go_table_p'])}</p>
+          <a class="btn btn-outline" href="{c.page('index')}#gallery">{esc(t['go_browse'])}</a>
         </div>
       </div>
     </div>
 
   </div>
 </section>
-""" + footer(include_contact=False) + "\n</body>\n</html>\n"
+""" + footer(c, include_contact=False) + "\n</body>\n</html>\n"
 
 
-# ----------------------------------------------------------------- legal pages
+# ------------------------------------------------------------------ legal pages
 IMPRESSUM_NAME    = "Srijana Gurung Shrestha"
 IMPRESSUM_STREET  = "Torgauer Straße 44A"
 IMPRESSUM_CITY    = "04315 Leipzig"
-IMPRESSUM_COUNTRY = "Germany"
+IMPRESSUM_COUNTRY = "Deutschland"
 IMPRESSUM_PHONE   = "+49 151 56076479"
+IMPRESSUM_PHONE_HREF = "+4915156076479"
 
 
-def build_impressum():
-    return head(
-        "Impressum — Srijana GS",
-        "Legal notice (Impressum) for srijana-art.github.io according to § 5 DDG.",
-        "",
-    ) + f"""
+def build_impressum(c):
+    """Legally German in both trees; the English page adds a short summary."""
+    t = c.t
+    summary = "" if c.lang == "de" else f"""
+    <hr>
+    <p class="updated">English summary: this is the legal notice required of German
+       websites. The artist can be reached at <a href="mailto:{EMAIL}">{EMAIL}</a>.
+       All artwork shown on this site remains the property of the artist.</p>"""
+
+    return head(c, "impressum", t["imp_title"], t["imp_desc"]) + f"""
 <section>
   <div class="wrap prose">
-    <div class="breadcrumb"><a href="index.html">Home</a></div>
+    <div class="breadcrumb"><a href="{c.page('index')}">{esc(t['breadcrumb_home'])}</a></div>
     <h1>Impressum</h1>
-    <p class="updated">Angaben gemäß § 5 DDG (ehemals § 5 TMG)</p>
+    <p class="updated">Angaben gem&auml;&szlig; &sect; 5 DDG (ehemals &sect; 5 TMG)</p>
 
     <h2>Diensteanbieter</h2>
     <address>
@@ -842,56 +835,59 @@ def build_impressum():
     <h2>Kontakt</h2>
     <address>
       E-Mail: <a href="mailto:{EMAIL}">{EMAIL}</a><br>
-      Telefon: <a href="tel:+4915156076479">{IMPRESSUM_PHONE}</a>
+      Telefon: <a href="tel:{IMPRESSUM_PHONE_HREF}">{IMPRESSUM_PHONE}</a>
     </address>
 
-    <h2>Verantwortlich für den Inhalt</h2>
+    <h2>Verantwortlich f&uuml;r den Inhalt</h2>
     <address>{IMPRESSUM_NAME}, Anschrift wie oben</address>
 
+    <h2>T&auml;tigkeit</h2>
+    <p>Selbstst&auml;ndige bildende K&uuml;nstlerin.</p>
+
     <h2>Umsatzsteuer</h2>
-    <p>Als Kleinunternehmerin im Sinne von § 19 UStG wird keine Umsatzsteuer ausgewiesen.</p>
-    <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a UStG:<br>
-       <strong>[TO FILL: USt-IdNr. from the Bundeszentralamt für Steuern]</strong></p>
-    <!-- The USt-IdNr. was issued by the BZSt when the Etsy shop was opened.
-         Paste it above. If no USt-IdNr. was in fact issued, delete this second
-         paragraph entirely and keep only the § 19 UStG line. -->
+    <p>Als Kleinunternehmerin im Sinne von &sect; 19 UStG wird keine Umsatzsteuer ausgewiesen.
+       Eine Umsatzsteuer-Identifikationsnummer nach &sect; 27 a UStG liegt nicht vor.</p>
+    <!-- Confirmed against the Finanzamt Leipzig I letter: she is registered as a
+         Kleinunternehmerin (§ 19 UStG), self-employed artist, profit determined
+         under § 4 Abs. 3 EStG. No USt-IdNr. was issued, so none is listed.
+         DO NOT publish the Steuernummer or the persönliche Identifikationsnummer
+         here — § 5 DDG asks only for a USt-IdNr., and only if one exists. -->
 
     <h2>Streitbeilegung</h2>
-    <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
+    <p>Die Europ&auml;ische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
        <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr/</a>.
        Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer
        Verbraucherschlichtungsstelle teilzunehmen.</p>
 
     <h2>Urheberrecht</h2>
-    <p>Sämtliche auf dieser Website gezeigten Kunstwerke, Abbildungen und Texte sind
-       urheberrechtlich geschützt und verbleiben Eigentum der Künstlerin. Eine Vervielfältigung,
-       Bearbeitung oder Verbreitung — insbesondere der Bilder der Gemälde — bedarf der
-       schriftlichen Zustimmung der Künstlerin.</p>
+    <p>S&auml;mtliche auf dieser Website gezeigten Kunstwerke, Abbildungen und Texte sind
+       urheberrechtlich gesch&uuml;tzt und verbleiben Eigentum der K&uuml;nstlerin. Eine Vervielf&auml;ltigung,
+       Bearbeitung oder Verbreitung &mdash; insbesondere der Bilder der Gem&auml;lde &mdash; bedarf der
+       schriftlichen Zustimmung der K&uuml;nstlerin.</p>
 
-    <h2>Haftung für Links</h2>
-    <p>Diese Website enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen
-       Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter
+    <h2>Haftung f&uuml;r Links</h2>
+    <p>Diese Website enth&auml;lt Links zu externen Websites Dritter, auf deren Inhalte wir keinen
+       Einfluss haben. F&uuml;r die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter
        oder Betreiber verantwortlich.</p>
-
-    <hr>
-    <p class="updated">English summary: this is the legal notice required of German websites.
-       The artist can be reached at <a href="mailto:{EMAIL}">{EMAIL}</a>. All artwork shown on
-       this site remains the property of the artist.</p>
+{summary}
   </div>
 </section>
-""" + footer(include_contact=False) + "\n</body>\n</html>\n"
+""" + footer(c, include_contact=False) + "\n</body>\n</html>\n"
 
 
-def build_datenschutz():
-    return head(
-        "Datenschutzerklärung — Srijana GS",
-        "Privacy notice for srijana-art.github.io.",
-        "",
-    ) + f"""
+def build_datenschutz(c):
+    t = c.t
+    summary = "" if c.lang == "de" else f"""
+    <hr>
+    <p class="updated">English summary: this site sets no cookies and runs no analytics.
+       It is hosted on GitHub Pages and loads fonts from Google Fonts, both of which see
+       your IP address. Contact happens by email only.</p>"""
+
+    return head(c, "datenschutz", t["ds_title"], t["ds_desc"]) + f"""
 <section>
   <div class="wrap prose">
-    <div class="breadcrumb"><a href="index.html">Home</a></div>
-    <h1>Datenschutzerklärung</h1>
+    <div class="breadcrumb"><a href="{c.page('index')}">{esc(t['breadcrumb_home'])}</a></div>
+    <h1>Datenschutzerkl&auml;rung</h1>
     <p class="updated">Stand: September 2026</p>
 
     <h2>1. Verantwortliche Stelle</h2>
@@ -905,8 +901,9 @@ def build_datenschutz():
     <h2>2. Grundsatz</h2>
     <p>Diese Website ist eine rein statische Seite. Sie setzt <strong>keine Cookies</strong>,
        verwendet <strong>kein Tracking</strong> und <strong>keine Analyse-Werkzeuge</strong>.
-       Es gibt kein Kontaktformular — die Kontaktaufnahme erfolgt ausschließlich über einen
-       E-Mail-Link.</p>
+       Es gibt kein Kontaktformular &mdash; die Kontaktaufnahme erfolgt ausschlie&szlig;lich &uuml;ber einen
+       E-Mail-Link. Die gew&auml;hlte Sprache und die Einstellung f&uuml;r den hellen oder dunklen Modus
+       werden ausschlie&szlig;lich lokal im Browser gespeichert und nicht &uuml;bertragen.</p>
 
     <h2>3. Hosting (GitHub Pages)</h2>
     <p>Diese Website wird von GitHub Pages gehostet, einem Dienst der GitHub, Inc.,
@@ -919,58 +916,82 @@ def build_datenschutz():
        <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement</a>.</p>
 
     <h2>4. Schriftarten (Google Fonts)</h2>
-    <p>Diese Website lädt Schriftarten von Google Fonts (Google Ireland Limited). Dabei wird
-       die IP-Adresse des Besuchers an Google übertragen. Rechtsgrundlage ist Art. 6 Abs. 1
-       lit. f DSGVO. <em>[Hinweis: Sollen keine Daten an Google übertragen werden, können die
-       Schriftarten lokal eingebunden werden — siehe README.md.]</em></p>
+    <p>Diese Website l&auml;dt Schriftarten von Google Fonts (Google Ireland Limited). Dabei wird
+       die IP-Adresse des Besuchers an Google &uuml;bertragen. Rechtsgrundlage ist Art. 6 Abs. 1
+       lit. f DSGVO. <em>[Hinweis: Sollen keine Daten an Google &uuml;bertragen werden, k&ouml;nnen die
+       Schriftarten lokal eingebunden werden &mdash; siehe README.md.]</em></p>
 
     <h2>5. Kontaktaufnahme per E-Mail</h2>
     <p>Wenn Sie per E-Mail Kontakt aufnehmen, werden Ihre Angaben zur Bearbeitung der Anfrage
-       und für den Fall von Anschlussfragen gespeichert. Rechtsgrundlage ist Art. 6 Abs. 1
-       lit. b DSGVO (vorvertragliche Maßnahmen) bzw. lit. f DSGVO. Die Daten werden gelöscht,
-       sobald sie für den Zweck nicht mehr erforderlich sind.</p>
+       und f&uuml;r den Fall von Anschlussfragen gespeichert. Rechtsgrundlage ist Art. 6 Abs. 1
+       lit. b DSGVO (vorvertragliche Ma&szlig;nahmen) bzw. lit. f DSGVO. Die Daten werden gel&ouml;scht,
+       sobald sie f&uuml;r den Zweck nicht mehr erforderlich sind.</p>
 
     <h2>6. Externe Links</h2>
-    <p>Diese Website verlinkt auf Instagram, Etsy und die Seiten der Stadt Markkleeberg bzw.
-       des Auktionshauses. Für die Datenverarbeitung auf diesen Seiten gelten die jeweiligen
-       Datenschutzerklärungen der Anbieter. Es werden keine Inhalte dieser Dienste direkt in
-       diese Website eingebettet.</p>
+    <p>Diese Website verlinkt auf Instagram, Etsy sowie die Seiten der Stadt Markkleeberg und
+       des Auktionshauses. F&uuml;r die Datenverarbeitung auf diesen Seiten gelten die jeweiligen
+       Datenschutzerkl&auml;rungen der Anbieter. Es werden keine Inhalte dieser Dienste direkt in
+       diese Website eingebettet; das Video wird von dieser Website selbst ausgeliefert.</p>
 
     <h2>7. Ihre Rechte</h2>
     <ul>
-      <li>Auskunft über die verarbeiteten Daten (Art. 15 DSGVO)</li>
+      <li>Auskunft &uuml;ber die verarbeiteten Daten (Art. 15 DSGVO)</li>
       <li>Berichtigung unrichtiger Daten (Art. 16 DSGVO)</li>
-      <li>Löschung (Art. 17 DSGVO) und Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
-      <li>Datenübertragbarkeit (Art. 20 DSGVO)</li>
+      <li>L&ouml;schung (Art. 17 DSGVO) und Einschr&auml;nkung der Verarbeitung (Art. 18 DSGVO)</li>
+      <li>Daten&uuml;bertragbarkeit (Art. 20 DSGVO)</li>
       <li>Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)</li>
-      <li>Beschwerde bei einer Aufsichtsbehörde (Art. 77 DSGVO)</li>
+      <li>Beschwerde bei einer Aufsichtsbeh&ouml;rde (Art. 77 DSGVO)</li>
     </ul>
-    <p>Zur Ausübung genügt eine E-Mail an <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
-
-    <hr>
-    <p class="updated">English summary: this site sets no cookies and runs no analytics.
-       It is hosted on GitHub Pages and loads fonts from Google Fonts, both of which see your
-       IP address. Contact happens by email only.</p>
+    <p>Zur Aus&uuml;bung gen&uuml;gt eine E-Mail an <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
+{summary}
   </div>
 </section>
-""" + footer(include_contact=False) + "\n</body>\n</html>\n"
+""" + footer(c, include_contact=False) + "\n</body>\n</html>\n"
 
 
-# ----------------------------------------------------------------- main
+# ------------------------------------------------------------------------ main
+BUILDERS = {
+    "index": build_index,
+    "exhibitions": build_exhibitions,
+    "kunstwinkel": build_kunstwinkel,
+    "garageost": build_garage_ost,
+    "impressum": build_impressum,
+    "datenschutz": build_datenschutz,
+}
+
+
+def sitemap():
+    urls = []
+    for key, (en_file, de_file) in PAGE_FILES.items():
+        urls.append(f"{SITE}{en_file}")
+        urls.append(f"{SITE}de/{de_file}")
+    body = "\n".join(f"  <url><loc>{u}</loc></url>" for u in urls)
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            f'{body}\n</urlset>\n')
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
-    pages = {
-        "index.html": build_index(),
-        "exhibitions.html": build_exhibitions(),
-        "exhibition-kunstwinkel.html": build_kunstwinkel(),
-        "exhibition-garage-ost.html": build_garage_ost(),
-        "impressum.html": build_impressum(),
-        "datenschutz.html": build_datenschutz(),
-    }
-    for name, content in pages.items():
-        with open(os.path.join(OUT, name), "w") as fh:
-            fh.write(content)
-        print(f"{name:32s} {len(content):>7,} bytes")
+    os.makedirs(os.path.join(OUT, "de"), exist_ok=True)
+    total = 0
+    for lang in ("en", "de"):
+        c = Ctx(lang)
+        for key, build in BUILDERS.items():
+            name = c.page(key)
+            path = os.path.join(OUT, name) if lang == "en" else os.path.join(OUT, "de", name)
+            content = build(c)
+            with open(path, "w", encoding="utf-8") as fh:
+                fh.write(content)
+            total += len(content)
+            rel = name if lang == "en" else "de/" + name
+            print(f"{rel:36s} {len(content):>7,} bytes")
+
+    with open(os.path.join(OUT, "sitemap.xml"), "w", encoding="utf-8") as fh:
+        fh.write(sitemap())
+    with open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8") as fh:
+        fh.write(f"User-agent: *\nAllow: /\nSitemap: {SITE}sitemap.xml\n")
+    print(f"\n{total:,} bytes of HTML, plus sitemap.xml and robots.txt")
 
 
 if __name__ == "__main__":

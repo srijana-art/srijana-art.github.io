@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://srijana-art.github.io/sitemap.xml

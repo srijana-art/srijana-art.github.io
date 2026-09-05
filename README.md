@@ -2,10 +2,14 @@
 
 A single-page portfolio site for Srijana GS, built from her Instagram (@srijana.art.gallery) content: bio, gallery of paintings, artist statement, and contact/commission info.
 
-> **The HTML pages are generated.** Edit `tools/build_site.py` and run
-> `python3 tools/build_site.py && cp build/*.html . && cp build/css/site.css css/`
-> — or just edit the HTML directly if it is a one-off change, but then keep
-> `tools/build_site.py` in step or the next build will overwrite it.
+> **The HTML pages are generated, in two languages.** All copy lives in
+> `tools/lang_data.py`; `tools/build_site.py` turns it into twelve pages.
+> Never edit the HTML by hand — the next build overwrites it.
+>
+> ```
+> python3 tools/build_site.py                 # preview into build/
+> OUT=. python3 tools/build_site.py           # write in place
+> ```
 
 ## Files
 - `index.html` — home: hero, about, gallery of 25 works, process
@@ -14,7 +18,10 @@ A single-page portfolio site for Srijana GS, built from her Instagram (@srijana.
 - `exhibition-garage-ost.html` — Kunstmarkt at Garage Ost, Leipzig
 - `impressum.html`, `datenschutz.html` — required for a German site
 - `css/site.css` — one stylesheet shared by every page, including the dark theme
-- `tools/build_site.py` — generates every page from one artwork table
+- `de/` — the same six pages in German
+- `sitemap.xml`, `robots.txt` — generated too
+- `tools/lang_data.py` — every string and all 25 artwork records, in both languages
+- `tools/build_site.py` — generates all twelve pages from that data
 - `tools/encode-video.sh` — turns an iPhone clip into a web-ready MP4 + poster
 - `images/thumbs/` — small JPEGs (max 700px) shown in the gallery grid
 - `images/events/` — exhibition photographs
@@ -112,3 +119,35 @@ Things in here that exist specifically for iOS Safari, so they don't get
   after a tap, and captions are always visible under `@media (hover: none)`.
 - The nav wraps to two rows below 860px — it does **not** hide the links.
 - `<video>` needs `playsinline`, or iPhone Safari takes it fullscreen.
+
+
+## Two languages
+
+English lives at the site root, German under `de/`. Both are real pages: each
+has its own `<title>`, meta description and `lang` attribute, and each declares
+its counterpart with `hreflang` so Google treats the pair as one document in two
+languages rather than as duplicate content. The `EN`/`DE` button in the nav links
+straight across.
+
+There is deliberately **no automatic redirect** by browser language. Redirects
+confuse crawlers and annoy anyone who wants the other language, so the visitor
+chooses.
+
+To change any wording, edit `tools/lang_data.py` and rebuild. Both language
+dictionaries must carry the same keys — the build fails loudly if one is missing.
+Adding a painting means adding one entry to `ART` with an `en=` and a `de=` tuple,
+and adding its id to `ORDER`.
+
+## The film
+
+`images/video/kunstwinkel.mp4` is on the Kunstwinkel exhibition page. It was
+re-encoded from an iPhone Cinematic-mode clip with `tools/encode-video.sh`:
+HEVC (which Chrome and Firefox cannot play) to H.264, 14 MB down to 4 MB,
+`+faststart` so it starts before it has finished downloading.
+
+It is committed to the repo directly. **Do not put it in Git LFS** — GitHub Pages
+does not resolve LFS objects; it serves the pointer file and the player fails
+silently. Anything under GitHub's 100 MB per-file limit should just be committed.
+
+The clip is portrait, so `.film-frame` is capped at 440px wide — an 820px column
+would make it 1450px tall on a desktop.

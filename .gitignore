@@ -6,3 +6,9 @@ images/markkeleeberg_kunst_winkel_fest/
 
 .DS_Store
 **/.DS_Store
+
+# Safety net: this repo is published as a public website. Personal documents
+# (tax letters, ID scans, invoices) must never be committed here — anything in
+# the repo is downloadable by anyone once Pages is live.
+*.pdf
+!docs/*.pdf

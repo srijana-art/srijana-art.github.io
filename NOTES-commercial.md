@@ -152,13 +152,14 @@ taking money directly triggers legally.
 Selling regularly and with intent to profit — including from a website —
 generally means:
 
-- **Registering the activity.** Selling your own original artwork is usually
-  treated as *freiberufliche künstlerische Tätigkeit* (§18 EStG), which needs a
-  *Fragebogen zur steuerlichen Erfassung* with the Finanzamt but **not** a
-  Gewerbeanmeldung. Reselling prints or merchandise can tip it into *gewerblich*,
-  which does need a Gewerbeanmeldung. The line between the two is exactly the
-  kind of thing to put to a Steuerberater — it's cheap to ask and expensive to
-  get wrong.
+- **Registering the activity — already done.** The Finanzamt Leipzig I letter
+  confirms she is registered as a *selbstständige bildende Künstlerin*, taxed as
+  a Kleinunternehmerin under § 19 UStG, with profit determined under § 4 Abs. 3
+  EStG (simple Einnahmen-Überschuss-Rechnung, no double-entry books). That is
+  exactly the right footing for selling her own originals, and no Gewerbeanmeldung
+  is needed for it. Reselling bought-in prints or merchandise could tip part of
+  the activity into *gewerblich* — worth one question to a Steuerberater if that
+  ever becomes a real part of the income.
 - **VAT.** Under the *Kleinunternehmerregelung* (§19 UStG) no VAT is charged
   while turnover stays under the current thresholds. If she ever exceeds them,
   original artworks sold by the artist fall under the reduced rate rather than
@@ -260,9 +261,26 @@ for one short clip.
 
 ---
 
-## 7. Outstanding TODOs in the code
+## 7. What must never go on the site
 
-- `impressum.html` — the USt-IdNr. from the Bundeszentralamt für Steuern.
+The Finanzamt letter contains three numbers. Only one of them could ever belong
+in an Impressum, and she does not have it:
+
+| Number | Publish? |
+| --- | --- |
+| USt-IdNr. (`DE` + 9 digits) | Required by § 27 a UStG **if one exists** — she has none, so the Impressum says so |
+| Steuernummer (`232/274/...`) | **Never.** Not required by § 5 DDG, and publishing it invites fraud |
+| Identifikationsnummer (personal, 11 digits) | **Never.** Personal tax ID, nothing to do with the business |
+
+These are easy to confuse — a lot of small German sites wrongly print their
+Steuernummer in the Impressum. The letter itself must not be committed to this
+repo either: it is a public website, so anything in the repo is downloadable, and
+git keeps it in history even after a later delete. `.gitignore` blocks `*.pdf`
+as a guard.
+
+---
+
+## 8. Outstanding TODOs in the code
 - `exhibition-garage-ost.html` — confirm date/time against the rausgegangen.de
   listing; optionally swap the card image for the organiser's own.
 - `exhibition-kunstwinkel.html` — the direct bidding URL, once Markkleeberg
