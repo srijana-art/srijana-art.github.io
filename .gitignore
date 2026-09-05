@@ -2,6 +2,7 @@
 # The site serves the optimized JPEGs in images/thumbs/ and images/web/.
 images/png/
 images/old/
+images/markkeleeberg_kunst_winkel_fest/
 
 .DS_Store
 **/.DS_Store

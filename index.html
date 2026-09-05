@@ -4,426 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Srijana GS — Artist</title>
-<meta name="description" content="Srijana GS is a self-taught artist working in acrylic and watercolor, painting portraits, landscapes, and still life inspired by memory, culture, and everyday tenderness.">
+<meta name="description" content="Original paintings by Srijana GS — portraits, landscapes and still life in acrylic and watercolour, made between Nepal and Leipzig. Works available; prices on request.">
 <meta property="og:title" content="Srijana GS — Artist">
-<meta property="og:description" content="Portraits, landscapes and still life in acrylic and watercolour, carried between Nepal and Leipzig.">
+<meta property="og:description" content="Original paintings by Srijana GS — portraits, landscapes and still life in acrylic and watercolour, made between Nepal and Leipzig. Works available; prices on request.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="images/thumbs/art3.jpg">
+<meta property="og:image" content="images/thumbs/art25.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #2a2420;
-    --ink-soft: #5c5450;
-    --paper: #faf6f0;
-    --paper-warm: #f2e9dd;
-    --accent: #a8462f;
-    --accent-soft: #c97b56;
-    --line: #ddd2c2;
-    --max-w: 1100px;
-  }
-
-  * { box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'Inter', system-ui, sans-serif;
-    font-weight: 400;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-  }
-  body.no-scroll { overflow: hidden; }
-
-  h1, h2, h3, .display {
-    font-family: 'Fraunces', Georgia, serif;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
-
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-
-  .wrap {
-    max-width: var(--max-w);
-    margin: 0 auto;
-    padding: 0 28px;
-  }
-
-  /* ---------- Nav ---------- */
-  header.site-nav {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: rgba(250, 246, 240, 0.88);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--line);
-  }
-  .nav-inner {
-    max-width: var(--max-w);
-    margin: 0 auto;
-    padding: 18px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .brand {
-    font-family: 'Fraunces', serif;
-    font-size: 1.25rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-  }
-  .brand span { color: var(--accent); }
-  nav.links { display: flex; gap: 28px; }
-  nav.links a {
-    color: var(--ink-soft);
-    font-size: 0.92rem;
-    font-weight: 500;
-  }
-  nav.links a:hover { color: var(--accent); text-decoration: none; }
-
-  /* ---------- Hero ---------- */
-  .hero {
-    padding: 90px 0 70px;
-    text-align: center;
-    background: linear-gradient(180deg, var(--paper-warm) 0%, var(--paper) 100%);
-  }
-  .hero .kicker {
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: 0.78rem;
-    color: var(--accent);
-    font-weight: 600;
-    margin-bottom: 18px;
-  }
-  .hero h1 {
-    font-size: clamp(2.4rem, 6vw, 4.2rem);
-    margin: 0 0 20px;
-    line-height: 1.08;
-  }
-  .hero p.lede {
-    max-width: 620px;
-    margin: 0 auto;
-    color: var(--ink-soft);
-    font-size: 1.15rem;
-  }
-  .hero .cta-row {
-    margin-top: 34px;
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .btn {
-    display: inline-block;
-    padding: 13px 28px;
-    border-radius: 999px;
-    font-weight: 500;
-    font-size: 0.95rem;
-    border: 1px solid var(--ink);
-    transition: all 0.2s ease;
-  }
-  .btn-solid {
-    background: var(--ink);
-    color: var(--paper);
-  }
-  .btn-solid:hover { background: var(--accent); border-color: var(--accent); text-decoration: none; color: #fff; }
-  .btn-outline {
-    background: transparent;
-    color: var(--ink);
-  }
-  .btn-outline:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
-
-  /* ---------- Section shared ---------- */
-  section { padding: 90px 0; }
-  .section-head {
-    text-align: center;
-    max-width: 640px;
-    margin: 0 auto 56px;
-  }
-  .section-head .kicker {
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: 0.76rem;
-    color: var(--accent);
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-  .section-head h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 14px; }
-  .section-head p { color: var(--ink-soft); margin: 0; }
-
-  /* ---------- About ---------- */
-  .about-grid {
-    display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 56px;
-    align-items: center;
-  }
-  .about-portrait {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 20px 45px -20px rgba(42, 36, 32, 0.35);
-  }
-  .about-portrait img { width: 100%; height: auto; display: block; }
-  .about-text p { color: var(--ink-soft); font-size: 1.03rem; margin: 0 0 18px; }
-  .about-text p:last-child { margin-bottom: 0; }
-  .about-text .quote {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 1.28rem;
-    color: var(--ink);
-    line-height: 1.5;
-    border-left: 3px solid var(--accent-soft);
-    padding-left: 20px;
-    margin: 26px 0;
-  }
-  .about-facts {
-    display: flex;
-    gap: 32px;
-    margin-top: 30px;
-    flex-wrap: wrap;
-  }
-  .fact .num {
-    font-family: 'Fraunces', serif;
-    font-size: 1.6rem;
-    color: var(--accent);
-    display: block;
-  }
-  .fact .label {
-    font-size: 0.82rem;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  /* ---------- Gallery ---------- */
-  .gallery-filter {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-  }
-  .filter-btn {
-    border: 1px solid var(--line);
-    background: transparent;
-    color: var(--ink-soft);
-    padding: 8px 18px;
-    border-radius: 999px;
-    font-size: 0.86rem;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-  .filter-btn:hover { border-color: var(--accent-soft); color: var(--accent); }
-  .filter-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-  .filter-btn .count { opacity: 0.55; font-size: 0.78em; margin-left: 5px; }
-
-  /* Masonry columns keep every painting at its true proportions */
-  .gallery-grid {
-    column-count: 3;
-    column-gap: 22px;
-  }
-  .art-card {
-    break-inside: avoid;
-    page-break-inside: avoid;
-    position: relative;
-    margin: 0 0 22px;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #fff;
-    border: 1px solid rgba(42, 36, 32, 0.09);
-    box-shadow: 0 12px 30px -18px rgba(42, 36, 32, 0.35);
-    cursor: zoom-in;
-    display: block;
-  }
-  .art-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .art-card img {
-    width: 100%;
-    height: auto;
-    display: block;
-    transition: transform 0.45s ease;
-    background: var(--paper-warm);
-  }
-  .art-card:hover img { transform: scale(1.035); }
-  .art-caption {
-    position: absolute;
-    inset: auto 0 0 0;
-    background: linear-gradient(180deg, transparent, rgba(20,15,12,0.88) 70%);
-    color: #f7f1e8;
-    padding: 40px 16px 14px;
-    font-size: 0.84rem;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    pointer-events: none;
-  }
-  .art-card:hover .art-caption,
-  .art-card:focus-visible .art-caption { opacity: 1; }
-  .art-caption strong { display: block; font-family: 'Fraunces', serif; font-size: 1.02rem; margin-bottom: 2px; font-weight: 500; }
-
-  @media (hover: none) {
-    .art-caption { opacity: 1; }
-  }
-
-  .art-card.hidden { display: none; }
-
-  /* ---------- Lightbox ---------- */
-  .lightbox {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(18, 13, 10, 0.975);
-    backdrop-filter: blur(6px);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 64px 72px;
-  }
-  .lightbox.open { display: flex; }
-  .lightbox-content {
-    max-width: 900px;
-    width: 100%;
-    text-align: center;
-  }
-  .lightbox-content img {
-    max-width: 100%;
-    max-height: 66vh;
-    width: auto;
-    border-radius: 6px;
-    box-shadow: 0 30px 70px rgba(0,0,0,0.55);
-  }
-  .lightbox-info { color: #f2ece2; margin-top: 20px; }
-  .lightbox-info strong { font-family: 'Fraunces', serif; font-size: 1.3rem; display: block; margin-bottom: 4px; font-weight: 500; }
-  .lightbox-info .medium {
-    display: block;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--accent-soft);
-    margin-bottom: 12px;
-  }
-  .lightbox-info p { color: #cfc4b6; font-size: 0.95rem; max-width: 580px; margin: 0 auto; }
-  .lb-btn {
-    position: absolute;
-    background: none;
-    border: none;
-    color: #f2ece2;
-    cursor: pointer;
-    line-height: 1;
-    padding: 10px 14px;
-    border-radius: 999px;
-    transition: background 0.15s ease;
-  }
-  .lb-btn:hover { background: rgba(255,255,255,0.12); }
-  .lightbox-close { top: 20px; right: 24px; font-size: 1.9rem; }
-  .lightbox-prev, .lightbox-next { top: 50%; transform: translateY(-50%); font-size: 2.2rem; }
-  .lightbox-prev { left: 14px; }
-  .lightbox-next { right: 14px; }
-  .lightbox-counter {
-    position: absolute;
-    bottom: 20px;
-    left: 0; right: 0;
-    text-align: center;
-    color: #8d827a;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-  }
-
-  /* ---------- Process strip ---------- */
-  .process { background: var(--paper-warm); }
-  .process-grid {
-    max-width: 720px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  .process-text p {
-    color: var(--ink-soft);
-    font-size: 1.15rem;
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    line-height: 1.6;
-  }
-
-  /* ---------- Contact ---------- */
-  .contact-box {
-    background: var(--ink);
-    color: var(--paper);
-    border-radius: 20px;
-    padding: 64px 48px;
-    text-align: center;
-  }
-  .contact-box h2 { color: var(--paper); margin: 0 0 16px; }
-  .contact-box p { color: #cfc4b6; max-width: 480px; margin: 0 auto 32px; }
-  .contact-links {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .contact-links a.btn-solid {
-    background: var(--paper);
-    color: var(--ink);
-    border-color: var(--paper);
-  }
-  .contact-links a.btn-solid:hover { background: var(--accent-soft); border-color: var(--accent-soft); color: #fff; }
-  .contact-links a.btn-outline {
-    border-color: #7a7069;
-    color: var(--paper);
-  }
-  .contact-links a.btn-outline:hover { border-color: var(--paper); color: var(--paper); }
-
-  footer {
-    padding: 36px 0;
-    text-align: center;
-    color: var(--ink-soft);
-    font-size: 0.85rem;
-  }
-  footer a { color: var(--ink-soft); }
-
-  /* ---------- Responsive ---------- */
-  @media (max-width: 860px) {
-    nav.links { display: none; }
-    .about-grid { grid-template-columns: 1fr; gap: 36px; }
-    .gallery-grid { column-count: 2; }
-    .lightbox { padding: 56px 20px; }
-    .lightbox-prev { left: 2px; }
-    .lightbox-next { right: 2px; }
-  }
-  @media (max-width: 540px) {
-    .hero { padding: 64px 0 48px; }
-    section { padding: 60px 0; }
-    .gallery-grid { column-count: 2; column-gap: 12px; }
-    .art-card { margin-bottom: 12px; }
-    .art-caption { padding: 28px 10px 9px; font-size: 0.72rem; }
-    .art-caption strong { font-size: 0.85rem; }
-    .contact-box { padding: 44px 24px; }
-    .lightbox-content img { max-height: 58vh; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    .art-card img, .art-caption { transition: none; }
-    .art-card:hover img { transform: none; }
-  }
-</style>
+<link rel="stylesheet" href="css/site.css">
 </head>
 <body>
-
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-nav">
   <div class="nav-inner">
-    <div class="brand">Srijana<span>.</span></div>
+    <a class="brand" href="index.html" style="color:inherit;text-decoration:none">Srijana<span>.</span></a>
     <nav class="links">
-      <a href="#about">About</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#process">Process</a>
-      <a href="#contact">Contact</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#gallery" class="current">Gallery</a>
+      <a href="exhibitions.html">Exhibitions</a>
+      <a href="index.html#contact">Contact</a>
     </nav>
   </div>
 </header>
+<main id="main">
 
 <section class="hero">
   <div class="wrap">
@@ -432,7 +36,7 @@
     <p class="lede">Self-taught artist working in acrylic and watercolor — painting faces, memory, and quiet moments carried between Nepal, and every place life has taken her since.</p>
     <div class="cta-row">
       <a href="#gallery" class="btn btn-solid">View the gallery</a>
-      <a href="https://www.instagram.com/srijana.art.gallery/" target="_blank" rel="noopener" class="btn btn-outline">Follow on Instagram</a>
+      <a href="exhibitions.html" class="btn btn-outline">Where to see the work</a>
     </div>
   </div>
 </section>
@@ -465,7 +69,11 @@
     <div class="section-head">
       <div class="kicker">Selected work</div>
       <h2>Gallery</h2>
-      <p>Twenty-five paintings — portraits, landscapes, and still life studies. Click any piece to see it larger. Follow along on Instagram for new work as it's finished.</p>
+      <p>Twenty-five paintings — portraits, landscapes, and still life studies. Click any piece to see it larger.</p>
+    </div>
+
+    <div class="avail-note">
+      <strong>Most of these paintings are available.</strong> Prices aren't listed because they depend on size, medium and framing — open any piece and use <em>Enquire about this piece</em>, and Srijana will come back to you with a price. Prints of selected works are on <a href="https://www.etsy.com/shop/SrijanaArtGallery" target="_blank" rel="noopener">Etsy</a>.
     </div>
 
     <div class="gallery-filter">
@@ -476,6 +84,17 @@
     </div>
 
     <div class="gallery-grid">
+      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View The Morning Pipe larger"
+              data-full="images/web/art25.jpg"
+              data-title="The Morning Pipe"
+              data-medium="Acrylic on canvas"
+              data-desc="An elderly woman draws on her pipe, both hands cupped around it, the whole painting held within one range of warm ochre and rose. This is the work now hanging in the open-air gallery at Am Kunstwinkel in Markkleeberg."
+              data-exhibition="exhibition-kunstwinkel.html">
+        <span class="badge badge-exhibited">On exhibition</span>
+        <img src="images/thumbs/art25.jpg" width="1510" height="1545" loading="lazy" decoding="async" alt="Painting of an elderly woman with grey hair smoking a pipe held in both cupped hands">
+        <figcaption class="art-caption"><strong>The Morning Pipe</strong>Acrylic on canvas</figcaption>
+      </figure>
+
       <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Honey Hunters of Nepal larger"
               data-full="images/web/art3.jpg"
               data-title="Honey Hunters of Nepal"
@@ -489,7 +108,7 @@
               data-full="images/web/art1.jpg"
               data-title="Carried"
               data-medium="Watercolour"
-              data-desc="A painting close to the artist's heart — begun in Thailand and completed in Germany before travelling on to New Zealand for the start of a PhD. “I have carried this painting wherever I go, and each time I see it, it reminds me to keep practicing art.”">
+              data-desc="A painting close to the artist&#x27;s heart — begun in Thailand and completed in Germany before travelling on to New Zealand for the start of a PhD. “I have carried this painting wherever I go, and each time I see it, it reminds me to keep practicing art.”">
         <img src="images/thumbs/art1.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Watercolour portrait of a mother carrying her child on her back in a plaid woven wrap">
         <figcaption class="art-caption"><strong>Carried</strong>Watercolour</figcaption>
       </figure>
@@ -510,15 +129,6 @@
               data-desc="The second time the artist has returned to this scene: a goat consoling a child who is home alone, waiting for her mother to return. “I can never get enough of this picture.”">
         <img src="images/thumbs/art6.jpg" width="1275" height="1800" loading="lazy" decoding="async" alt="Painting of a young child in a red dress comforted by a white goat in a doorway">
         <figcaption class="art-caption"><strong>Waiting</strong>Watercolour &amp; mixed media</figcaption>
-      </figure>
-
-      <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Warmth larger"
-              data-full="images/web/art25.jpg"
-              data-title="Warmth"
-              data-medium="Acrylic on canvas"
-              data-desc="An elderly woman lifts a cup in both hands; the whole painting is held within one range of warm ochre and rose.">
-        <img src="images/thumbs/art25.jpg" width="1510" height="1545" loading="lazy" decoding="async" alt="Painting of an elderly woman with grey hair drinking from a cup held in both hands">
-        <figcaption class="art-caption"><strong>Warmth</strong>Acrylic on canvas</figcaption>
       </figure>
 
       <figure class="art-card" data-cat="portrait" tabindex="0" role="button" aria-label="View Carrying Rhododendrons larger"
@@ -721,21 +331,31 @@
 <section id="contact">
   <div class="wrap">
     <div class="contact-box">
-      <h2>Commissions &amp; inquiries</h2>
-      <p>For custom portrait commissions, prints, or questions about a piece — reach out on Instagram or by message. Always happy to talk about a painting, or the story behind one.</p>
+      <h2>Commissions, prices &amp; enquiries</h2>
+      <p>Every painting on this site is an original, and most are available. Prices depend on size, medium and whether the piece is framed — write with the title you're interested in and you'll get a quote, usually within a couple of days.</p>
+      <a class="contact-email" href="mailto:srijana.art.art.gallery@gmail.com">srijana.art.art.gallery@gmail.com</a>
       <div class="contact-links">
-        <a href="https://www.instagram.com/srijana.art.gallery/" target="_blank" rel="noopener" class="btn btn-solid">@srijana.art.gallery</a>
-        <a href="https://www.etsy.com/shop/SrijanaArtGallery" target="_blank" rel="noopener" class="btn btn-outline">Shop on Etsy</a>
+        <a href="mailto:srijana.art.art.gallery@gmail.com?subject=Painting%20enquiry" class="btn btn-solid">Email Srijana</a>
+        <a href="https://www.instagram.com/srijana.art.gallery/" target="_blank" rel="noopener" class="btn btn-outline">@srijana.art.gallery</a>
+        <a href="https://www.etsy.com/shop/SrijanaArtGallery" target="_blank" rel="noopener" class="btn btn-outline">Prints on Etsy</a>
       </div>
     </div>
   </div>
 </section>
-
+</main>
 <footer>
   <div class="wrap">
-    &copy; <span id="year"></span> Srijana GS. All artwork shown remains the property of the artist.
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="exhibitions.html">Exhibitions</a>
+      <a href="mailto:srijana.art.art.gallery@gmail.com">Email</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+    </div>
+    &copy; <span id="year">2026</span> Srijana GS. All artwork shown remains the property of the artist.
   </div>
 </footer>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <button class="lb-btn lightbox-close" id="lb-close" aria-label="Close">&times;</button>
@@ -747,6 +367,10 @@
       <strong id="lightbox-title"></strong>
       <span class="medium" id="lightbox-medium"></span>
       <p id="lightbox-desc"></p>
+      <div class="lightbox-actions">
+        <a class="btn btn-solid" id="lb-enquire" href="#">Enquire about this piece</a>
+        <a class="btn btn-outline hidden" id="lb-exhibition" href="#">See it on exhibition</a>
+      </div>
     </div>
   </div>
   <div class="lightbox-counter" id="lightbox-counter"></div>
@@ -754,16 +378,36 @@
 
 <script>
 (function () {
-  document.getElementById('year').textContent = new Date().getFullYear();
-
+  var EMAIL = 'srijana.art.art.gallery@gmail.com';
   var cards    = Array.prototype.slice.call(document.querySelectorAll('.art-card'));
   var lightbox = document.getElementById('lightbox');
+  if (!lightbox || !cards.length) return;
   var lbImg    = document.getElementById('lightbox-img');
+  var enquire  = document.getElementById('lb-enquire');
+  var exhLink  = document.getElementById('lb-exhibition');
   var current  = -1;
   var lastFocus = null;
 
   function visibleCards() {
     return cards.filter(function (c) { return !c.classList.contains('hidden'); });
+  }
+
+  // Builds the prefilled enquiry email so the visitor never has to describe the piece.
+  function mailtoFor(card) {
+    var title  = card.dataset.title;
+    var medium = card.dataset.medium;
+    var subject = 'Enquiry: "' + title + '"';
+    var body =
+      'Hello Srijana,\n\n' +
+      'I saw "' + title + '" (' + medium + ') on your website and would like to know more.\n\n' +
+      'Could you tell me:\n' +
+      '  \u2022 the price\n' +
+      '  \u2022 the size, and whether it is framed\n' +
+      '  \u2022 whether it can be shipped, and roughly what that would cost\n\n' +
+      'Thank you,\n';
+    return 'mailto:' + EMAIL +
+           '?subject=' + encodeURIComponent(subject) +
+           '&body='   + encodeURIComponent(body);
   }
 
   function show(card) {
@@ -777,6 +421,13 @@
     document.getElementById('lightbox-medium').textContent = card.dataset.medium;
     document.getElementById('lightbox-desc').textContent   = card.dataset.desc;
     document.getElementById('lightbox-counter').textContent = (i + 1) + ' / ' + list.length;
+    enquire.href = mailtoFor(card);
+    if (card.dataset.exhibition) {
+      exhLink.href = card.dataset.exhibition;
+      exhLink.classList.remove('hidden');
+    } else {
+      exhLink.classList.add('hidden');
+    }
   }
 
   function open(card) {
@@ -822,7 +473,6 @@
     else if (e.key === 'ArrowRight') step(1);
   });
 
-  // Swipe on touch devices
   var touchX = null;
   lightbox.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
   lightbox.addEventListener('touchend', function (e) {
@@ -832,7 +482,6 @@
     touchX = null;
   }, { passive: true });
 
-  // Gallery filter
   document.querySelectorAll('.filter-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
       document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
