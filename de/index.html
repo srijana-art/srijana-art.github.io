@@ -13,10 +13,9 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta property="og:image" content="https://srijana-art.github.io/images/thumbs/art25.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/site.css">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../fonts/inter-latin-wght-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../fonts/fraunces-latin-wght-normal.woff2">
 <meta name="theme-color" content="#faf6f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
 <script>
@@ -47,7 +46,14 @@
     </nav>
     <div class="nav-tools">
       <a class="lang-switch" href="../index.html" hreflang="en" lang="en"
-         title="This page in English" aria-label="This page in English">EN</a>
+         title="This page in English" aria-label="This page in English">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.2"></circle>
+          <path d="M2.8 12h18.4M12 2.8a15 15 0 0 1 0 18.4M12 2.8a15 15 0 0 0 0 18.4"></path>
+        </svg>
+        <span>English</span>
+      </a>
       <button class="theme-toggle" id="theme-toggle" type="button"
               aria-label="Zwischen hellem und dunklem Modus wechseln" title="Zwischen hellem und dunklem Modus wechseln">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
@@ -417,9 +423,9 @@
     <div class="contact-box">
       <h2>Auftragsarbeiten, Preise &amp; Anfragen</h2>
       <p>Jedes Bild auf dieser Seite ist ein Original, und die meisten sind verfügbar. Der Preis hängt von Größe, Technik und Rahmung ab — schreiben Sie einfach mit dem Titel des Bildes, das Sie interessiert, und Sie bekommen in der Regel innerhalb von zwei Tagen eine Antwort.</p>
-      <a class="contact-email" href="mailto:srijana.art.art.gallery@gmail.com">srijana.art.art.gallery@gmail.com</a>
+      <a class="contact-email" href="mailto:srijana.art.gallery@gmail.com">srijana.art.gallery@gmail.com</a>
       <div class="contact-links">
-        <a href="mailto:srijana.art.art.gallery@gmail.com?subject=Bildanfrage" class="btn btn-solid">Srijana schreiben</a>
+        <a href="mailto:srijana.art.gallery@gmail.com?subject=Bildanfrage" class="btn btn-solid">Srijana schreiben</a>
         <a href="https://www.instagram.com/srijana.art.gallery/" target="_blank" rel="noopener" class="btn btn-outline">@srijana.art.gallery</a>
         <a href="https://www.etsy.com/shop/SrijanaArtGallery" target="_blank" rel="noopener" class="btn btn-outline">Drucke auf Etsy</a>
       </div>
@@ -432,7 +438,7 @@
     <div class="footer-links">
       <a href="index.html">Startseite</a>
       <a href="ausstellungen.html">Ausstellungen</a>
-      <a href="mailto:srijana.art.art.gallery@gmail.com">E-Mail</a>
+      <a href="mailto:srijana.art.gallery@gmail.com">E-Mail</a>
       <a href="impressum.html">Impressum</a>
       <a href="datenschutz.html">Datenschutz</a>
     </div>
@@ -492,7 +498,7 @@
 
 <script>
 (function () {
-  var EMAIL = 'srijana.art.art.gallery@gmail.com';
+  var EMAIL = 'srijana.art.gallery@gmail.com';
   var MAIL  = {"subject": "Anfrage: „{t}“", "body": "Hallo Srijana,\n\nich habe „{t}“ ({m}) auf Ihrer Website gesehen und hätte gern mehr Informationen.\n\nKönnten Sie mir sagen:\n  • den Preis\n  • die Maße, und ob das Bild gerahmt ist\n  • ob ein Versand möglich ist und was er ungefähr kosten würde\n\nVielen Dank,\n"};   // language-specific enquiry template
   var cards    = Array.prototype.slice.call(document.querySelectorAll('.art-card'));
   var lightbox = document.getElementById('lightbox');

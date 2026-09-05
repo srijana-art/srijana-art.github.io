@@ -19,7 +19,7 @@ from lang_data import ART, ORDER, S, PAGE_FILES
 
 OUT = os.environ.get("OUT", "build")
 SITE = "https://srijana-art.github.io/"
-EMAIL = "srijana.art.art.gallery@gmail.com"
+EMAIL = "srijana.art.gallery@gmail.com"
 INSTA = "https://www.instagram.com/srijana.art.gallery/"
 ETSY = "https://www.etsy.com/shop/SrijanaArtGallery"
 KW_FEST = "https://www.markkleeberg.de/kunstwinkelfest"
@@ -79,10 +79,9 @@ def head(c, key, title, desc, nav_current=""):
 <meta property="og:type" content="website">
 <meta property="og:locale" content="{'en_GB' if c.lang == 'en' else 'de_DE'}">
 <meta property="og:image" content="{SITE}images/thumbs/art25.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{c.asset('css/site.css')}">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="{c.asset('fonts/inter-latin-wght-normal.woff2')}">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="{c.asset('fonts/fraunces-latin-wght-normal.woff2')}">
 <meta name="theme-color" content="#faf6f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
 <script>
@@ -125,7 +124,14 @@ def nav(c, key, current):
     </nav>
     <div class="nav-tools">
       <a class="lang-switch" href="{c.other(key)}" hreflang="{other_lang}" lang="{other_lang}"
-         title="{esc(t['lang_switch_label'])}" aria-label="{esc(t['lang_switch_label'])}">{esc(t['lang_switch_text'])}</a>
+         title="{esc(t['lang_switch_label'])}" aria-label="{esc(t['lang_switch_label'])}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.2"></circle>
+          <path d="M2.8 12h18.4M12 2.8a15 15 0 0 1 0 18.4M12 2.8a15 15 0 0 0 0 18.4"></path>
+        </svg>
+        <span>{esc(t['lang_switch_name'])}</span>
+      </a>
       <button class="theme-toggle" id="theme-toggle" type="button"
               aria-label="{esc(t['theme_label'])}" title="{esc(t['theme_label'])}">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
@@ -582,7 +588,7 @@ def build_exhibitions(c):
     <div class="exh-list">
 
       <a class="exh-card" href="{c.page('garageost')}" style="text-decoration:none">
-        <img src="{c.asset('images/events/garage-ost.jpg')}" alt="{esc(ART[22][c.lang][3])}" loading="lazy">
+        <img src="{c.asset('images/events/garage-ost-sm.jpg')}" alt="{esc(t['go_poster_alt'])}" loading="lazy">
         <div class="body">
           <span class="status-pill status-upcoming">{esc(t['pill_up'])}</span>
           <div class="when">{esc(t['card_go_when'])}</div>
@@ -645,10 +651,10 @@ def build_kunstwinkel(c):
     photos = [("kw-board", t['kw_alt_board']),
               ("kw-artist-wall", t['kw_alt_artist_wall']),
               ("kw-panel-detail", t['kw_alt_detail']),
-              ("kw-crowd", t['kw_alt_crowd']),
+              ("kw-wall-lettering", t['kw_alt_lettering']),
               ("kw-artist", t['kw_alt_artist']),
               ("kw-board-angle", t['kw_alt_angle']),
-              ("kw-crowd-close", t['kw_alt_crowd_close']),
+              ("kw-wall-wide", t['kw_alt_wide']),
               ("kw-artist-full", t['kw_alt_artist_full'])]
     strip = "\n".join(
         f'''      <figure><img src="{c.asset(f'images/events/{n}-sm.jpg')}" '''
@@ -758,6 +764,12 @@ def build_garage_ost(c):
   <div class="wrap event-grid">
 
     <div>
+      <figure class="event-poster">
+        <img src="{c.asset('images/events/garage-ost.jpg')}" width="1200" height="675"
+             alt="{esc(t['go_poster_alt'])}" loading="lazy">
+        <figcaption>{esc(t['go_poster_credit'])}</figcaption>
+      </figure>
+
       <h2 style="margin-top:0;">{esc(t['go_come_h'])}</h2>
       <p style="color: var(--ink-soft);">{esc(t['go_p1'])}</p>
       <p style="color: var(--ink-soft);">{t['go_p2'].format(gallery=c.page('index'), email=EMAIL)}</p>
@@ -915,11 +927,10 @@ def build_datenschutz(c):
        (berechtigtes Interesse). Weitere Informationen:
        <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement</a>.</p>
 
-    <h2>4. Schriftarten (Google Fonts)</h2>
-    <p>Diese Website l&auml;dt Schriftarten von Google Fonts (Google Ireland Limited). Dabei wird
-       die IP-Adresse des Besuchers an Google &uuml;bertragen. Rechtsgrundlage ist Art. 6 Abs. 1
-       lit. f DSGVO. <em>[Hinweis: Sollen keine Daten an Google &uuml;bertragen werden, k&ouml;nnen die
-       Schriftarten lokal eingebunden werden &mdash; siehe README.md.]</em></p>
+    <h2>4. Schriftarten</h2>
+    <p>Alle verwendeten Schriftarten werden von diesem Server selbst ausgeliefert. Es besteht
+       <strong>keine Verbindung zu Google Fonts</strong> oder zu einem anderen externen
+       Schriftarten-Dienst; es werden dabei keine Daten an Dritte &uuml;bertragen.</p>
 
     <h2>5. Kontaktaufnahme per E-Mail</h2>
     <p>Wenn Sie per E-Mail Kontakt aufnehmen, werden Ihre Angaben zur Bearbeitung der Anfrage

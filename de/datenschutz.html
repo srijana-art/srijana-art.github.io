@@ -13,10 +13,9 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta property="og:image" content="https://srijana-art.github.io/images/thumbs/art25.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/site.css">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../fonts/inter-latin-wght-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../fonts/fraunces-latin-wght-normal.woff2">
 <meta name="theme-color" content="#faf6f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
 <script>
@@ -47,7 +46,14 @@
     </nav>
     <div class="nav-tools">
       <a class="lang-switch" href="../datenschutz.html" hreflang="en" lang="en"
-         title="This page in English" aria-label="This page in English">EN</a>
+         title="This page in English" aria-label="This page in English">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.2"></circle>
+          <path d="M2.8 12h18.4M12 2.8a15 15 0 0 1 0 18.4M12 2.8a15 15 0 0 0 0 18.4"></path>
+        </svg>
+        <span>English</span>
+      </a>
       <button class="theme-toggle" id="theme-toggle" type="button"
               aria-label="Zwischen hellem und dunklem Modus wechseln" title="Zwischen hellem und dunklem Modus wechseln">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
@@ -76,7 +82,7 @@
       Srijana Gurung Shrestha<br>
       Torgauer Straße 44A<br>
       04315 Leipzig<br>
-      E-Mail: <a href="mailto:srijana.art.art.gallery@gmail.com">srijana.art.art.gallery@gmail.com</a>
+      E-Mail: <a href="mailto:srijana.art.gallery@gmail.com">srijana.art.gallery@gmail.com</a>
     </address>
 
     <h2>2. Grundsatz</h2>
@@ -96,11 +102,10 @@
        (berechtigtes Interesse). Weitere Informationen:
        <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement</a>.</p>
 
-    <h2>4. Schriftarten (Google Fonts)</h2>
-    <p>Diese Website l&auml;dt Schriftarten von Google Fonts (Google Ireland Limited). Dabei wird
-       die IP-Adresse des Besuchers an Google &uuml;bertragen. Rechtsgrundlage ist Art. 6 Abs. 1
-       lit. f DSGVO. <em>[Hinweis: Sollen keine Daten an Google &uuml;bertragen werden, k&ouml;nnen die
-       Schriftarten lokal eingebunden werden &mdash; siehe README.md.]</em></p>
+    <h2>4. Schriftarten</h2>
+    <p>Alle verwendeten Schriftarten werden von diesem Server selbst ausgeliefert. Es besteht
+       <strong>keine Verbindung zu Google Fonts</strong> oder zu einem anderen externen
+       Schriftarten-Dienst; es werden dabei keine Daten an Dritte &uuml;bertragen.</p>
 
     <h2>5. Kontaktaufnahme per E-Mail</h2>
     <p>Wenn Sie per E-Mail Kontakt aufnehmen, werden Ihre Angaben zur Bearbeitung der Anfrage
@@ -123,7 +128,7 @@
       <li>Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)</li>
       <li>Beschwerde bei einer Aufsichtsbeh&ouml;rde (Art. 77 DSGVO)</li>
     </ul>
-    <p>Zur Aus&uuml;bung gen&uuml;gt eine E-Mail an <a href="mailto:srijana.art.art.gallery@gmail.com">srijana.art.art.gallery@gmail.com</a>.</p>
+    <p>Zur Aus&uuml;bung gen&uuml;gt eine E-Mail an <a href="mailto:srijana.art.gallery@gmail.com">srijana.art.gallery@gmail.com</a>.</p>
 
   </div>
 </section>
@@ -134,7 +139,7 @@
     <div class="footer-links">
       <a href="index.html">Startseite</a>
       <a href="ausstellungen.html">Ausstellungen</a>
-      <a href="mailto:srijana.art.art.gallery@gmail.com">E-Mail</a>
+      <a href="mailto:srijana.art.gallery@gmail.com">E-Mail</a>
       <a href="impressum.html">Impressum</a>
       <a href="datenschutz.html">Datenschutz</a>
     </div>

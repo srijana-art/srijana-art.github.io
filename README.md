@@ -18,6 +18,8 @@ A single-page portfolio site for Srijana GS, built from her Instagram (@srijana.
 - `exhibition-garage-ost.html` — Kunstmarkt at Garage Ost, Leipzig
 - `impressum.html`, `datenschutz.html` — required for a German site
 - `css/site.css` — one stylesheet shared by every page, including the dark theme
+- `fonts/` — self-hosted variable fonts (see below)
+- `docs/verkauf-vorlagen.md` — Widerrufsbelehrung and quote-email templates
 - `de/` — the same six pages in German
 - `sitemap.xml`, `robots.txt` — generated too
 - `tools/lang_data.py` — every string and all 25 artwork records, in both languages
@@ -151,3 +153,32 @@ silently. Anything under GitHub's 100 MB per-file limit should just be committed
 
 The clip is portrait, so `.film-frame` is capped at 440px wide — an 820px column
 would make it 1450px tall on a desktop.
+
+
+## Fonts are self-hosted — keep them that way
+
+`fonts/` holds four variable-font files (Fraunces and Inter, latin subset,
+normal + italic, ~190 KB total) served from this domain. There is deliberately
+**no `fonts.googleapis.com` link** anywhere.
+
+Loading fonts from Google's CDN sends every visitor's IP address to Google. A
+Munich court awarded damages over exactly that (LG München I, 20.01.2022,
+3 O 17493/20) and it became a standing Abmahnung target in Germany. Self-hosting
+removes the transfer, which is why the Datenschutzerklärung can state that no
+data goes to third parties. If someone re-adds a Google Fonts `<link>`, that
+sentence becomes false.
+
+To update a font: `npm i @fontsource-variable/fraunces @fontsource-variable/inter`,
+copy the `-latin-wght-*.woff2` files into `fonts/`, done — the `@font-face`
+blocks at the top of `css/site.css` do not need changing.
+
+## Photographs of people
+
+The Kunstwinkel photo strip deliberately avoids recognisable faces of members of
+the public. Crowd shots were replaced with wall-only crops. Srijana appears in
+her own photographs by her own consent. If new event photos are added, keep to
+the same rule — §23 KUG covers crowds at public events, but a tight shot of an
+identifiable stranger is a different matter.
+
+The Garage Ost poster is the organiser's own artwork, used to announce her
+participation and credited on the page.

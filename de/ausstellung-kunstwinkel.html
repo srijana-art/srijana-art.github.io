@@ -13,10 +13,9 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta property="og:image" content="https://srijana-art.github.io/images/thumbs/art25.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/site.css">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../fonts/inter-latin-wght-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../fonts/fraunces-latin-wght-normal.woff2">
 <meta name="theme-color" content="#faf6f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
 <script>
@@ -47,7 +46,14 @@
     </nav>
     <div class="nav-tools">
       <a class="lang-switch" href="../exhibition-kunstwinkel.html" hreflang="en" lang="en"
-         title="This page in English" aria-label="This page in English">EN</a>
+         title="This page in English" aria-label="This page in English">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.2"></circle>
+          <path d="M2.8 12h18.4M12 2.8a15 15 0 0 1 0 18.4M12 2.8a15 15 0 0 0 0 18.4"></path>
+        </svg>
+        <span>English</span>
+      </a>
       <button class="theme-toggle" id="theme-toggle" type="button"
               aria-label="Zwischen hellem und dunklem Modus wechseln" title="Zwischen hellem und dunklem Modus wechseln">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
@@ -115,7 +121,7 @@
              <a class="btn btn-solid" href="https://auktion.ikv-fester.de/...">Place a bid on this painting</a> -->
       </div>
 
-      <p style="color: var(--ink-soft);">Wenn Sie nicht bis zur Versteigerung warten möchten: Srijana hat weitere Originale direkt verfügbar — <a href="index.html#gallery">zur Galerie</a> oder <a href="mailto:srijana.art.art.gallery@gmail.com?subject=Bildanfrage">schreiben Sie ihr</a>.</p>
+      <p style="color: var(--ink-soft);">Wenn Sie nicht bis zur Versteigerung warten möchten: Srijana hat weitere Originale direkt verfügbar — <a href="index.html#gallery">zur Galerie</a> oder <a href="mailto:srijana.art.gallery@gmail.com?subject=Bildanfrage">schreiben Sie ihr</a>.</p>
     </div>
 
   </div>
@@ -150,10 +156,10 @@
       <figure><img src="../images/events/kw-board-sm.jpg" data-full="../images/events/kw-board.jpg" loading="lazy" decoding="async" alt="Die Wand der Freiluftgalerie Am Kunstwinkel in Markkleeberg mit den 24 neu enthüllten Werken"></figure>
       <figure><img src="../images/events/kw-artist-wall-sm.jpg" data-full="../images/events/kw-artist-wall.jpg" loading="lazy" decoding="async" alt="Srijana vor der Kunstwinkel-Wand am Tag der Enthüllung"></figure>
       <figure><img src="../images/events/kw-panel-detail-sm.jpg" data-full="../images/events/kw-panel-detail.jpg" loading="lazy" decoding="async" alt="Nahaufnahme der Wand mit „Die Morgenpfeife“ zwischen den Nachbarwerken"></figure>
-      <figure><img src="../images/events/kw-crowd-sm.jpg" data-full="../images/events/kw-crowd.jpg" loading="lazy" decoding="async" alt="Besucherinnen und Besucher vor der Kunstwinkel-Wand beim Kunstwinkelfest"></figure>
+      <figure><img src="../images/events/kw-wall-lettering-sm.jpg" data-full="../images/events/kw-wall-lettering.jpg" loading="lazy" decoding="async" alt="Der Schriftzug Am Kunstwinkel über der angebrachten Sammlung von 24 Werken"></figure>
       <figure><img src="../images/events/kw-artist-sm.jpg" data-full="../images/events/kw-artist.jpg" loading="lazy" decoding="async" alt="Srijana beim Kunstwinkelfest"></figure>
       <figure><img src="../images/events/kw-board-angle-sm.jpg" data-full="../images/events/kw-board-angle.jpg" loading="lazy" decoding="async" alt="Die Galeriewand von der Seite, darunter das gemalte Seenpanorama"></figure>
-      <figure><img src="../images/events/kw-crowd-close-sm.jpg" data-full="../images/events/kw-crowd-close.jpg" loading="lazy" decoding="async" alt="Das Publikum blickt zur neu enthüllten Sammlung hinauf"></figure>
+      <figure><img src="../images/events/kw-wall-wide-sm.jpg" data-full="../images/events/kw-wall-wide.jpg" loading="lazy" decoding="async" alt="Die Giebelwand Am Kunstwinkel mit der Freiluftgalerie unter dem Schriftzug"></figure>
       <figure><img src="../images/events/kw-artist-full-sm.jpg" data-full="../images/events/kw-artist-full.jpg" loading="lazy" decoding="async" alt="Srijana unter dem Schriftzug Am Kunstwinkel"></figure>
     </div>
   </div>
@@ -165,7 +171,7 @@
     <div class="footer-links">
       <a href="index.html">Startseite</a>
       <a href="ausstellungen.html">Ausstellungen</a>
-      <a href="mailto:srijana.art.art.gallery@gmail.com">E-Mail</a>
+      <a href="mailto:srijana.art.gallery@gmail.com">E-Mail</a>
       <a href="impressum.html">Impressum</a>
       <a href="datenschutz.html">Datenschutz</a>
     </div>

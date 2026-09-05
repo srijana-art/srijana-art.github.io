@@ -13,10 +13,9 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_GB">
 <meta property="og:image" content="https://srijana-art.github.io/images/thumbs/art25.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/inter-latin-wght-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/fraunces-latin-wght-normal.woff2">
 <meta name="theme-color" content="#faf6f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
 <script>
@@ -47,7 +46,14 @@
     </nav>
     <div class="nav-tools">
       <a class="lang-switch" href="de/ausstellung-garage-ost.html" hreflang="de" lang="de"
-         title="Diese Seite auf Deutsch" aria-label="Diese Seite auf Deutsch">DE</a>
+         title="Diese Seite auf Deutsch" aria-label="Diese Seite auf Deutsch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.2"></circle>
+          <path d="M2.8 12h18.4M12 2.8a15 15 0 0 1 0 18.4M12 2.8a15 15 0 0 0 0 18.4"></path>
+        </svg>
+        <span>Deutsch</span>
+      </a>
       <button class="theme-toggle" id="theme-toggle" type="button"
               aria-label="Switch between light and dark mode" title="Switch between light and dark mode">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
@@ -78,9 +84,15 @@
   <div class="wrap event-grid">
 
     <div>
+      <figure class="event-poster">
+        <img src="images/events/garage-ost.jpg" width="1200" height="675"
+             alt="Kunstmarkt poster from Garage Ost — a market stall of prints, ceramics and framed artwork" loading="lazy">
+        <figcaption>Event poster: Garage Ost.</figcaption>
+      </figure>
+
       <h2 style="margin-top:0;">Come and say hello</h2>
       <p style="color: var(--ink-soft);">Srijana will have her own table, showing original paintings and smaller works on paper. Everything on the table is for sale, and there is no obligation at all — it&#x27;s just as good a reason to come and look closely at the brushwork, ask how a piece was made, or talk about a portrait of someone in your own family.</p>
-      <p style="color: var(--ink-soft);">If there's a particular painting from the <a href="index.html#gallery">gallery</a> you'd like to see in person, <a href="mailto:srijana.art.art.gallery@gmail.com?subject=Garage%20Ost%20-%20can%20you%20bring%20a%20painting%3F">send a message beforehand</a> and she'll bring it along.</p>
+      <p style="color: var(--ink-soft);">If there's a particular painting from the <a href="index.html#gallery">gallery</a> you'd like to see in person, <a href="mailto:srijana.art.gallery@gmail.com?subject=Garage%20Ost%20-%20can%20you%20bring%20a%20painting%3F">send a message beforehand</a> and she'll bring it along.</p>
 
       <table class="facts-table">
         <tr><th>Event</th><td>Kunstmarkt — Srijana&#x27;s table: original paintings, studies and prints</td></tr>
@@ -98,7 +110,7 @@
              (only if they allow reuse) or a photo of her table after the event -->
 
       <div class="callout">
-        <p><strong>Date still to be confirmed.</strong> The venue is fixed; the exact date and time follow the organiser's listing. Follow <a href="https://www.instagram.com/srijana.art.gallery/" target="_blank" rel="noopener">@srijana.art.gallery</a>, or <a href="mailto:srijana.art.art.gallery@gmail.com?subject=Garage%20Ost%20details">ask by email</a>. The listing is on <a href="https://rausgegangen.de/en/events/kunstmarkt-227/" target="_blank" rel="noopener">rausgegangen.de</a>.</p>
+        <p><strong>Date still to be confirmed.</strong> The venue is fixed; the exact date and time follow the organiser's listing. Follow <a href="https://www.instagram.com/srijana.art.gallery/" target="_blank" rel="noopener">@srijana.art.gallery</a>, or <a href="mailto:srijana.art.gallery@gmail.com?subject=Garage%20Ost%20details">ask by email</a>. The listing is on <a href="https://rausgegangen.de/en/events/kunstmarkt-227/" target="_blank" rel="noopener">rausgegangen.de</a>.</p>
       </div>
     </div>
 
@@ -123,7 +135,7 @@
     <div class="footer-links">
       <a href="index.html">Home</a>
       <a href="exhibitions.html">Exhibitions</a>
-      <a href="mailto:srijana.art.art.gallery@gmail.com">Email</a>
+      <a href="mailto:srijana.art.gallery@gmail.com">Email</a>
       <a href="impressum.html">Impressum</a>
       <a href="datenschutz.html">Datenschutz</a>
     </div>

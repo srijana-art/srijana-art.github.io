@@ -15,7 +15,7 @@ office before acting on it.
 
 | Piece | Status |
 | --- | --- |
-| Email contact | `srijana.art.art.gallery@gmail.com`, shown in Contact and in the footer |
+| Email contact | `srijana.art.gallery@gmail.com`, shown in Contact and in the footer |
 | "Enquire about this piece" | On every painting in the lightbox. Opens the visitor's mail app with the title, medium and a checklist of questions already written |
 | Availability message | Above the gallery grid — says work is available and explains why prices aren't listed |
 | Exhibitions section | `exhibitions.html` + one page per event, designed to stay as an archive |
@@ -167,10 +167,11 @@ generally means:
 - **Right of withdrawal.** Consumers buying at a distance get 14 days to return
   the goods, and you must give them a *Widerrufsbelehrung* before they buy.
   Individually commissioned work is exempt (§312g Abs. 2 Nr. 1 BGB) — a stock
-  painting sold off the website is not.
+  painting sold off the website is not. **Drafted:** the wording lives in
+  `docs/verkauf-vorlagen.md`, ready to paste under each quote email.
 - **Packaging.** Shipping packaged goods to German consumers requires
   registration in the **LUCID** packaging register under the Verpackungsgesetz.
-  This applies to small sellers too and is often missed.
+  This applies to small sellers too and is often missed. Still outstanding.
 - **General terms and a proper Impressum.** The Impressum has to carry a real
   postal address — a P.O. box isn't sufficient.
 
@@ -287,3 +288,20 @@ as a guard.
   publishes the 2027 catalogue (see the `TODO 2027` comment in that file).
 - `tools/build_site.py` — set `VIDEO` once the studio clip is encoded.
 - Titles and mediums for the 21 works that Srijana hasn't named herself.
+
+
+---
+
+## 9. Legal state as of September 2026
+
+| Item | State |
+| --- | --- |
+| Tax registration | Done — selbstständige bildende Künstlerin, §19 UStG, §4(3) EStG |
+| Impressum | Done — current address, correct §19 wording, no USt-IdNr claimed |
+| Datenschutzerklärung | Done — and now true: no cookies, no analytics, no third-party fonts |
+| Google Fonts exposure | Removed — fonts self-hosted from `fonts/` |
+| Widerrufsbelehrung | Drafted in `docs/verkauf-vorlagen.md`; goes in the quote email, not on the site |
+| Photos of the public | Crowd shots replaced with wall-only crops |
+| Prices shown | None — so the Preisangabenverordnung is not triggered |
+| **LUCID packaging register** | **Outstanding** — needed before the first shipped sale |
+| Legal review | Recommended once, before the first sale |

@@ -13,10 +13,9 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="en_GB">
 <meta property="og:image" content="https://srijana-art.github.io/images/thumbs/art25.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/inter-latin-wght-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fonts/fraunces-latin-wght-normal.woff2">
 <meta name="theme-color" content="#faf6f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
 <script>
@@ -47,7 +46,14 @@
     </nav>
     <div class="nav-tools">
       <a class="lang-switch" href="de/ausstellungen.html" hreflang="de" lang="de"
-         title="Diese Seite auf Deutsch" aria-label="Diese Seite auf Deutsch">DE</a>
+         title="Diese Seite auf Deutsch" aria-label="Diese Seite auf Deutsch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.2"></circle>
+          <path d="M2.8 12h18.4M12 2.8a15 15 0 0 1 0 18.4M12 2.8a15 15 0 0 0 0 18.4"></path>
+        </svg>
+        <span>Deutsch</span>
+      </a>
       <button class="theme-toggle" id="theme-toggle" type="button"
               aria-label="Switch between light and dark mode" title="Switch between light and dark mode">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
@@ -78,7 +84,7 @@
     <div class="exh-list">
 
       <a class="exh-card" href="exhibition-garage-ost.html" style="text-decoration:none">
-        <img src="images/events/garage-ost.jpg" alt="Acrylic painting of a thatched Nepali house among green palms with snow mountains behind" loading="lazy">
+        <img src="images/events/garage-ost-sm.jpg" alt="Kunstmarkt poster from Garage Ost — a market stall of prints, ceramics and framed artwork" loading="lazy">
         <div class="body">
           <span class="status-pill status-upcoming">Upcoming</span>
           <div class="when">Saturday 12 September 2026 · 13:00–16:00</div>
@@ -102,7 +108,7 @@
     </div>
 
     <div class="callout" style="margin-top: 44px;">
-      <p><strong>Organising something?</strong> Srijana is open to markets, group shows and café or practice exhibitions in and around Leipzig. Write to <a href="mailto:srijana.art.art.gallery@gmail.com">srijana.art.art.gallery@gmail.com</a>.</p>
+      <p><strong>Organising something?</strong> Srijana is open to markets, group shows and café or practice exhibitions in and around Leipzig. Write to <a href="mailto:srijana.art.gallery@gmail.com">srijana.art.gallery@gmail.com</a>.</p>
     </div>
   </div>
 </section>
@@ -113,7 +119,7 @@
     <div class="footer-links">
       <a href="index.html">Home</a>
       <a href="exhibitions.html">Exhibitions</a>
-      <a href="mailto:srijana.art.art.gallery@gmail.com">Email</a>
+      <a href="mailto:srijana.art.gallery@gmail.com">Email</a>
       <a href="impressum.html">Impressum</a>
       <a href="datenschutz.html">Datenschutz</a>
     </div>
