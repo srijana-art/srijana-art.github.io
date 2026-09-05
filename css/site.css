@@ -908,3 +908,17 @@
     .lightbox-info p { margin: 0; max-width: none; }
     .lightbox-actions { justify-content: flex-start; }
   }
+
+  /* The journey is four place names long, so it drops to its own line under the
+     two short facts rather than squeezing them out of the row. */
+  .about-facts { gap: 22px 34px; }
+  .about-facts .fact { order: 1; }
+  .about-facts .fact-wide { order: 2; flex: 1 1 100%; min-width: 0; }
+  .fact-wide .num {
+    font-size: 1.06rem;
+    line-height: 1.45;
+    letter-spacing: 0;
+  }
+  @media (max-width: 540px) {
+    .fact-wide .num { font-size: 0.98rem; }
+  }

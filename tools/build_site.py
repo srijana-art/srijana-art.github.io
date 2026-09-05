@@ -515,7 +515,7 @@ def build_index(c):
 <section id="about">
   <div class="wrap about-grid">
     <div class="about-portrait">
-      <img src="{c.asset('images/web/art1.jpg')}" width="1275" height="1800" alt="{esc(ART[1][c.lang][3])}">
+      <img src="{c.asset('images/web/artist-studio.jpg')}" width="919" height="1400" alt="{esc(t['about_photo_alt'])}">
     </div>
     <div class="about-text">
       <div class="section-head" style="text-align:left; margin: 0 0 20px;">
@@ -528,7 +528,7 @@ def build_index(c):
       <p>{esc(t['about_p3'])}</p>
       <div class="about-facts">
         <div class="fact"><span class="num">{len(ORDER)}</span><span class="label">{esc(t['fact1'])}</span></div>
-        <div class="fact"><span class="num">{esc(t['fact2_n'])}</span><span class="label">{esc(t['fact2'])}</span></div>
+        <div class="fact fact-wide"><span class="num">{esc(t['fact2_n'])}</span><span class="label">{esc(t['fact2'])}</span></div>
         <div class="fact"><span class="num">{esc(t['fact3_n'])}</span><span class="label">{esc(t['fact3'])}</span></div>
       </div>
     </div>
