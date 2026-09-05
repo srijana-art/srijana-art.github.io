@@ -9,6 +9,11 @@ ETSY = "https://www.etsy.com/shop/SrijanaArtGallery"
 KW_FEST = "https://www.markkleeberg.de/kunstwinkelfest"
 KW_AUCTION_HOUSE = "https://auktion.ikv-fester.de/"
 
+# Set VIDEO to the basename once the encoded files exist in images/video/
+# (expects <name>.mp4 and <name>.jpg as the poster). None hides the section.
+VIDEO = None
+VIDEO_W, VIDEO_H = 1080, 1920
+
 def esc(s):
     return html.escape(s, quote=True)
 
@@ -117,6 +122,22 @@ def head(title, desc, rel_current, extra_head=""):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
+<meta name="theme-color" content="#faf6f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+<script>
+/* Applied before first paint so the page never flashes the wrong theme.
+   Explicit choice wins; otherwise follow the operating system. */
+(function () {{
+  try {{
+    var saved = localStorage.getItem('theme');
+    var theme = (saved === 'light' || saved === 'dark') ? saved
+      : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  }} catch (e) {{
+    document.documentElement.setAttribute('data-theme', 'light');
+  }}
+}})();
+</script>
 {extra_head}</head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -137,6 +158,18 @@ def nav(current):
       <a href="exhibitions.html"{cls('exhibitions')}>Exhibitions</a>
       <a href="index.html#contact"{cls('contact')}>Contact</a>
     </nav>
+    <button class="theme-toggle" id="theme-toggle" type="button"
+              aria-label="Switch between light and dark mode" title="Switch between light and dark mode">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2"></circle>
+        <path d="M12 1.6v2.4M12 20v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M1.6 12h2.4M20 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"></path>
+      </svg>
+    </button>
   </div>
 </header>"""
 
@@ -175,7 +208,39 @@ def footer(include_contact=True):
     &copy; <span id="year">2026</span> Srijana GS. All artwork shown remains the property of the artist.
   </div>
 </footer>
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script>
+(function () {{
+  var y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
+
+  var btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  var root = document.documentElement;
+  function sync() {{
+    var dark = root.getAttribute('data-theme') === 'dark';
+    btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+    btn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+  }}
+  sync();
+  btn.addEventListener('click', function () {{
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try {{ localStorage.setItem('theme', next); }} catch (e) {{}}
+    sync();
+  }});
+  // Follow the OS only while the visitor has not made a choice of their own.
+  if (window.matchMedia) {{
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var onChange = function (e) {{
+      try {{ if (localStorage.getItem('theme')) return; }} catch (err) {{}}
+      root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+      sync();
+    }};
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else if (mq.addListener) mq.addListener(onChange);
+  }}
+}})();
+</script>
 """
 
 
@@ -214,6 +279,20 @@ GALLERY_JS = """
   var exhLink  = document.getElementById('lb-exhibition');
   var current  = -1;
   var lastFocus = null;
+
+  // iOS Safari does not honour overflow:hidden on <body>, so the page is
+  // pinned with position:fixed and the scroll position restored on close.
+  var scrollY = 0;
+  function lockScroll() {
+    scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    document.body.style.top = (-scrollY) + 'px';
+    document.body.classList.add('no-scroll');
+  }
+  function unlockScroll() {
+    document.body.classList.remove('no-scroll');
+    document.body.style.top = '';
+    window.scrollTo(0, scrollY);
+  }
 
   function visibleCards() {
     return cards.filter(function (c) { return !c.classList.contains('hidden'); });
@@ -261,13 +340,13 @@ GALLERY_JS = """
     lastFocus = document.activeElement;
     show(card);
     lightbox.classList.add('open');
-    document.body.classList.add('no-scroll');
+    lockScroll();
     document.getElementById('lb-close').focus();
   }
 
   function close() {
     lightbox.classList.remove('open');
-    document.body.classList.remove('no-scroll');
+    unlockScroll();
     lbImg.src = '';
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
@@ -302,6 +381,7 @@ GALLERY_JS = """
 
   var touchX = null;
   lightbox.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchmove', function (e) { if (e.cancelable) e.preventDefault(); }, { passive: false });
   lightbox.addEventListener('touchend', function (e) {
     if (touchX === null) return;
     var dx = e.changedTouches[0].clientX - touchX;
@@ -352,6 +432,31 @@ def counts():
     for n in ORDER:
         c[ART[n][1]] += 1
     return c
+
+
+def film_section():
+    """The artist film. Rendered only when VIDEO points at real files."""
+    if not VIDEO:
+        return ""
+    return f"""
+<section class="film">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">In her own space</div>
+      <h2>A minute in the studio</h2>
+      <p>Filmed in Leipzig — the artist, and the painting she was working on.</p>
+    </div>
+    <div class="film-frame">
+      <video controls playsinline preload="none" width="{VIDEO_W}" height="{VIDEO_H}"
+             poster="images/video/{VIDEO}.jpg">
+        <source src="images/video/{VIDEO}.mp4" type="video/mp4">
+        <p style="color:#fff;padding:20px">Your browser can't play this video.
+           <a href="images/video/{VIDEO}.mp4">Download it instead</a>.</p>
+      </video>
+    </div>
+    <p class="film-caption">Srijana in the studio, September 2026.</p>
+  </div>
+</section>"""
 
 
 def build_index():
@@ -421,6 +526,7 @@ def build_index():
   </div>
 </section>
 
+""" + film_section() + f"""
 <section id="process" class="process">
   <div class="wrap process-grid">
     <div class="section-head" style="margin-bottom: 28px;">
@@ -456,13 +562,13 @@ def build_exhibitions():
   <div class="wrap">
     <div class="exh-list">
 
-      <a class="exh-card" href="exhibition-garagenhof.html" style="text-decoration:none">
-        <img src="images/events/kw-artist-wall-sm.jpg" alt="Srijana standing in front of the open-air gallery wall" loading="lazy">
+      <a class="exh-card" href="exhibition-garage-ost.html" style="text-decoration:none">
+        <img src="images/events/garage-ost.jpg" alt="Kunstmarkt at Garage Ost, Leipzig" loading="lazy">
         <div class="body">
           <span class="status-pill status-upcoming">Upcoming</span>
           <div class="when">Saturday 12 September 2026 · 13:00–16:00</div>
-          <h3>Garagenhof, Leipzig</h3>
-          <p>A table of her own at the Garagenhof — originals, studies and prints, and the chance to talk to her about a commission in person.</p>
+          <h3>Kunstmarkt, Garage Ost</h3>
+          <p>A table of her own at the Kunstmarkt in Garage Ost — originals, studies and prints, and the chance to talk to her about a commission in person.</p>
           <span class="go">Event details →</span>
         </div>
       </a>
@@ -594,6 +700,19 @@ def build_kunstwinkel():
   var lb = document.getElementById('lightbox');
   if (!lb || !figs.length) return;
   var img = document.getElementById('lightbox-img'), i = -1, lastFocus = null;
+  // iOS Safari does not honour overflow:hidden on <body>, so the page is
+  // pinned with position:fixed and the scroll position restored on close.
+  var scrollY = 0;
+  function lockScroll() {
+    scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    document.body.style.top = (-scrollY) + 'px';
+    document.body.classList.add('no-scroll');
+  }
+  function unlockScroll() {
+    document.body.classList.remove('no-scroll');
+    document.body.style.top = '';
+    window.scrollTo(0, scrollY);
+  }
   function show(n) {
     i = (n + figs.length) % figs.length;
     var el = figs[i].querySelector('img');
@@ -602,8 +721,8 @@ def build_kunstwinkel():
     document.getElementById('lightbox-counter').textContent = (i + 1) + ' / ' + figs.length;
   }
   function open(n) { lastFocus = document.activeElement; show(n); lb.classList.add('open');
-                     document.body.classList.add('no-scroll'); document.getElementById('lb-close').focus(); }
-  function close() { lb.classList.remove('open'); document.body.classList.remove('no-scroll');
+                     lockScroll(); document.getElementById('lb-close').focus(); }
+  function close() { lb.classList.remove('open'); unlockScroll();
                      img.src = ''; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
   figs.forEach(function (f, n) {
     f.setAttribute('tabindex', '0'); f.setAttribute('role', 'button');
@@ -631,18 +750,18 @@ def build_kunstwinkel():
 """
 
 
-# ----------------------------------------------------------------- Garagenhof
-def build_garagenhof():
+# ----------------------------------------------------------------- Garage Ost
+def build_garage_ost():
     return head(
-        "Garagenhof, Leipzig — Srijana GS",
-        "Srijana GS shows and sells original paintings at her own table at the Garagenhof in Leipzig, Saturday 12 September 2026, 13:00–16:00.",
+        "Kunstmarkt, Garage Ost Leipzig — Srijana GS",
+        "Srijana GS shows and sells original paintings at her own table at the Kunstmarkt in Garage Ost, Leipzig — Saturday 12 September 2026, 13:00–16:00.",
         "exhibitions",
     ) + f"""
 <section class="event-hero">
   <div class="wrap">
     <div class="breadcrumb"><a href="index.html">Home</a> · <a href="exhibitions.html">Exhibitions</a></div>
     <span class="status-pill status-upcoming">Upcoming</span>
-    <h1>A table at the Garagenhof</h1>
+    <h1>Kunstmarkt at Garage Ost</h1>
     <p class="lede">One afternoon in Leipzig with the originals on the table — the paintings from this website, some studies that never made it online, and the chance to talk about a commission face to face.</p>
   </div>
 </section>
@@ -653,25 +772,25 @@ def build_garagenhof():
     <div>
       <h2 style="margin-top:0;">Come and say hello</h2>
       <p style="color: var(--ink-soft);">Srijana will have her own table, showing original paintings and smaller works on paper. Everything on the table is for sale, and there is no obligation at all — it's just as good a reason to come and look closely at the brushwork, ask how a piece was made, or talk about a portrait of someone in your own family.</p>
-      <p style="color: var(--ink-soft);">If there's a particular painting from the <a href="index.html#gallery">gallery</a> you'd like to see in person, <a href="mailto:{EMAIL}?subject=Garagenhof%20-%20can%20you%20bring%20a%20painting%3F">send a message beforehand</a> and she'll bring it along.</p>
+      <p style="color: var(--ink-soft);">If there's a particular painting from the <a href="index.html#gallery">gallery</a> you'd like to see in person, <a href="mailto:{EMAIL}?subject=Garage%20Ost%20-%20can%20you%20bring%20a%20painting%3F">send a message beforehand</a> and she'll bring it along.</p>
 
       <table class="facts-table">
-        <tr><th>What</th><td>Srijana's table — original paintings, studies and prints</td></tr>
+        <tr><th>Event</th><td>Kunstmarkt — Srijana's table: original paintings, studies and prints</td></tr>
         <tr><th>Date</th><td>Saturday, 12 September 2026</td></tr>
         <tr><th>Time</th><td>13:00 – 16:00</td></tr>
-        <tr><th>Where</th><td>Garagenhof, Leipzig <span style="color:var(--accent)">— full address to be confirmed</span></td></tr>
+        <tr><th>Venue</th><td>Garage Ost</td></tr>
+        <tr><th>Address</th><td>Hermann-Liebmann-Straße 65–67, 04315 Leipzig</td></tr>
         <tr><th>Entry</th><td>Free</td></tr>
         <tr><th>Payment</th><td>Cash, or bank transfer by arrangement</td></tr>
       </table>
 
       <!-- TODO before publishing:
-           - confirm the exact venue name and full street address
-           - confirm the date (assumed: the Saturday after 5 Sep 2026)
-           - add the organiser's event link if there is one
-           - add a photo of her table once the event has happened -->
+           - confirm the date/time against https://rausgegangen.de/en/events/kunstmarkt-227/
+           - swap images/events/garage-ost.jpg for the organiser's own event image
+             (only if they allow reuse) or a photo of her table after the event -->
 
       <div class="callout">
-        <p><strong>Details still being confirmed.</strong> The venue address and organiser link will be added here shortly. Follow <a href="{INSTA}" target="_blank" rel="noopener">@srijana.art.gallery</a> for the final details, or <a href="mailto:{EMAIL}?subject=Garagenhof%20details">ask by email</a>.</p>
+        <p><strong>Date still to be confirmed.</strong> The venue is fixed; the exact date and time will be pinned to the organiser's listing. Follow <a href="{INSTA}" target="_blank" rel="noopener">@srijana.art.gallery</a> for the final details, or <a href="mailto:{EMAIL}?subject=Garage%20Ost%20details">ask by email</a>. The organiser's listing is on <a href="https://rausgegangen.de/en/events/kunstmarkt-227/" target="_blank" rel="noopener">rausgegangen.de</a>.</p>
       </div>
     </div>
 
@@ -693,11 +812,11 @@ def build_garagenhof():
 
 
 # ----------------------------------------------------------------- legal pages
-IMPRESSUM_NAME    = "[TO FILL: full legal name]"
-IMPRESSUM_STREET  = "[TO FILL: street and number]"
-IMPRESSUM_CITY    = "[TO FILL: postcode and city]"
+IMPRESSUM_NAME    = "Srijana Gurung Shrestha"
+IMPRESSUM_STREET  = "Torgauer Straße 44A"
+IMPRESSUM_CITY    = "04315 Leipzig"
 IMPRESSUM_COUNTRY = "Germany"
-IMPRESSUM_PHONE   = "[TO FILL: phone number, or delete this line]"
+IMPRESSUM_PHONE   = "+49 151 56076479"
 
 
 def build_impressum():
@@ -723,18 +842,19 @@ def build_impressum():
     <h2>Kontakt</h2>
     <address>
       E-Mail: <a href="mailto:{EMAIL}">{EMAIL}</a><br>
-      Telefon: {IMPRESSUM_PHONE}
+      Telefon: <a href="tel:+4915156076479">{IMPRESSUM_PHONE}</a>
     </address>
 
     <h2>Verantwortlich für den Inhalt</h2>
     <address>{IMPRESSUM_NAME}, Anschrift wie oben</address>
 
     <h2>Umsatzsteuer</h2>
-    <p>Als Kleinunternehmerin im Sinne von § 19 UStG wird keine Umsatzsteuer berechnet und
-       daher auch keine Umsatzsteuer-Identifikationsnummer geführt.</p>
-    <p><em>[TO CHECK: only keep this section if she is registered as a Kleinunternehmerin.
-       If she has a USt-IdNr., replace this with it. If she is not registered at all,
-       delete this section and see the notes in README.md.]</em></p>
+    <p>Als Kleinunternehmerin im Sinne von § 19 UStG wird keine Umsatzsteuer ausgewiesen.</p>
+    <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a UStG:<br>
+       <strong>[TO FILL: USt-IdNr. from the Bundeszentralamt für Steuern]</strong></p>
+    <!-- The USt-IdNr. was issued by the BZSt when the Etsy shop was opened.
+         Paste it above. If no USt-IdNr. was in fact issued, delete this second
+         paragraph entirely and keep only the § 19 UStG line. -->
 
     <h2>Streitbeilegung</h2>
     <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
@@ -843,7 +963,7 @@ def main():
         "index.html": build_index(),
         "exhibitions.html": build_exhibitions(),
         "exhibition-kunstwinkel.html": build_kunstwinkel(),
-        "exhibition-garagenhof.html": build_garagenhof(),
+        "exhibition-garage-ost.html": build_garage_ost(),
         "impressum.html": build_impressum(),
         "datenschutz.html": build_datenschutz(),
     }

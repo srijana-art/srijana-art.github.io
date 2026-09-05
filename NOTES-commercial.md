@@ -224,11 +224,48 @@ one painting.
 
 ---
 
-## 6. Outstanding TODOs in the code
+## 6. Video on a GitHub Pages site
 
-- `impressum.html` / `datenschutz.html` — real name, address and phone.
-- `impressum.html` — confirm or delete the Kleinunternehmer paragraph.
-- `exhibition-garagenhof.html` — venue address, confirmed date, organiser link.
+**Do not use Git LFS for this.** GitHub Pages does not resolve LFS objects — it
+serves the *pointer file* instead of the video, so the player gets a 130-byte
+text file and fails silently. LFS is fine for a normal repo; it is the wrong
+tool for anything Pages has to serve to a browser.
+
+The limits that actually apply:
+
+- 100 MB hard limit per file in git (a push with a bigger file is rejected)
+- ~1 GB recommended maximum for a Pages site
+- 100 GB/month soft bandwidth limit
+
+A one-minute clip does not need to come anywhere near those. `tools/encode-video.sh`
+re-encodes an iPhone clip to about **5–12 MB** — long-edge capped at 1280px,
+H.264 at CRF 26, AAC audio, `+faststart` so it begins playing before it has
+finished downloading. That is small enough to commit directly, with no LFS and
+no external host.
+
+Two things specific to iPhone footage:
+
+- **Cinematic mode records HEVC.** Safari plays HEVC; Chrome and Firefox do not.
+  Re-encoding to H.264 is what makes the video work everywhere, and it also
+  flattens the rack-focus effect into the picture — which is what you want,
+  since the depth track is useless on the web.
+- Export the clip from Photos the normal way (Share → Save to Files). "Export
+  Unmodified Original" gives the raw capture *without* the cinematic effect
+  baked in.
+
+The alternative — YouTube or Vimeo unlisted, embedded — costs nothing in repo
+size but loads third-party tracking, which means either a consent banner or a
+click-to-load facade, plus an update to the Datenschutzerklärung. Not worth it
+for one short clip.
+
+---
+
+## 7. Outstanding TODOs in the code
+
+- `impressum.html` — the USt-IdNr. from the Bundeszentralamt für Steuern.
+- `exhibition-garage-ost.html` — confirm date/time against the rausgegangen.de
+  listing; optionally swap the card image for the organiser's own.
 - `exhibition-kunstwinkel.html` — the direct bidding URL, once Markkleeberg
   publishes the 2027 catalogue (see the `TODO 2027` comment in that file).
+- `tools/build_site.py` — set `VIDEO` once the studio clip is encoded.
 - Titles and mediums for the 21 works that Srijana hasn't named herself.

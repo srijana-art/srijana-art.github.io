@@ -13,6 +13,22 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
+<meta name="theme-color" content="#faf6f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15120e" media="(prefers-color-scheme: dark)">
+<script>
+/* Applied before first paint so the page never flashes the wrong theme.
+   Explicit choice wins; otherwise follow the operating system. */
+(function () {
+  try {
+    var saved = localStorage.getItem('theme');
+    var theme = (saved === 'light' || saved === 'dark') ? saved
+      : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  } catch (e) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -25,6 +41,18 @@
       <a href="exhibitions.html">Exhibitions</a>
       <a href="index.html#contact">Contact</a>
     </nav>
+    <button class="theme-toggle" id="theme-toggle" type="button"
+              aria-label="Switch between light and dark mode" title="Switch between light and dark mode">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2"></circle>
+        <path d="M12 1.6v2.4M12 20v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M1.6 12h2.4M20 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"></path>
+      </svg>
+    </button>
   </div>
 </header>
 <main id="main">
@@ -314,6 +342,7 @@
   </div>
 </section>
 
+
 <section id="process" class="process">
   <div class="wrap process-grid">
     <div class="section-head" style="margin-bottom: 28px;">
@@ -355,7 +384,39 @@
     &copy; <span id="year">2026</span> Srijana GS. All artwork shown remains the property of the artist.
   </div>
 </footer>
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script>
+(function () {
+  var y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
+
+  var btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  var root = document.documentElement;
+  function sync() {
+    var dark = root.getAttribute('data-theme') === 'dark';
+    btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+    btn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+  }
+  sync();
+  btn.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    sync();
+  });
+  // Follow the OS only while the visitor has not made a choice of their own.
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var onChange = function (e) {
+      try { if (localStorage.getItem('theme')) return; } catch (err) {}
+      root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+      sync();
+    };
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else if (mq.addListener) mq.addListener(onChange);
+  }
+})();
+</script>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <button class="lb-btn lightbox-close" id="lb-close" aria-label="Close">&times;</button>
@@ -387,6 +448,20 @@
   var exhLink  = document.getElementById('lb-exhibition');
   var current  = -1;
   var lastFocus = null;
+
+  // iOS Safari does not honour overflow:hidden on <body>, so the page is
+  // pinned with position:fixed and the scroll position restored on close.
+  var scrollY = 0;
+  function lockScroll() {
+    scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    document.body.style.top = (-scrollY) + 'px';
+    document.body.classList.add('no-scroll');
+  }
+  function unlockScroll() {
+    document.body.classList.remove('no-scroll');
+    document.body.style.top = '';
+    window.scrollTo(0, scrollY);
+  }
 
   function visibleCards() {
     return cards.filter(function (c) { return !c.classList.contains('hidden'); });
@@ -434,13 +509,13 @@
     lastFocus = document.activeElement;
     show(card);
     lightbox.classList.add('open');
-    document.body.classList.add('no-scroll');
+    lockScroll();
     document.getElementById('lb-close').focus();
   }
 
   function close() {
     lightbox.classList.remove('open');
-    document.body.classList.remove('no-scroll');
+    unlockScroll();
     lbImg.src = '';
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
@@ -475,6 +550,7 @@
 
   var touchX = null;
   lightbox.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchmove', function (e) { if (e.cancelable) e.preventDefault(); }, { passive: false });
   lightbox.addEventListener('touchend', function (e) {
     if (touchX === null) return;
     var dx = e.changedTouches[0].clientX - touchX;
