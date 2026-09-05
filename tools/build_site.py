@@ -35,13 +35,34 @@ EXHIBITED = {25: "kunstwinkel"}   # artwork id -> page key
 # Small inline icons for the contact buttons. Both are generic shapes drawn
 # here — deliberately NOT the Instagram brand glyph, which is a registered mark
 # and should come from Meta's own brand resources if it is used at all.
-ICON_MAIL = ('<svg class="btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+ICON_MAIL = ('<svg class="btn-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
              'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
              '<rect x="2.5" y="4.8" width="19" height="14.4" rx="2.2"></rect>'
              '<path d="M3.2 6.6 12 13.1l8.8-6.5"></path></svg>')
 # Meta's official white Instagram glyph, used unmodified from their brand
 # resources. The contact panel is dark in both themes, so the white variant is
 # the correct one; do not recolour it.
+
+
+def css_version():
+    """Short hash of the stylesheet, appended to its URL.
+
+    Without this a browser keeps serving a cached site.css after a deploy, so
+    new rules silently do not apply — which is exactly how the contact icons
+    ended up rendering at full size in Safari.
+    """
+    import hashlib
+    here = os.path.dirname(os.path.abspath(__file__))
+    for cand in (os.path.join(here, "..", "css", "site.css"),
+                 os.path.join(OUT, "css", "site.css"),
+                 "css/site.css"):
+        if os.path.exists(cand):
+            with open(cand, "rb") as fh:
+                return hashlib.sha1(fh.read()).hexdigest()[:8]
+    return "1"
+
+
+CSS_V = None
 
 
 def esc(s):
@@ -90,7 +111,7 @@ def head(c, key, title, desc, nav_current=""):
 <meta property="og:type" content="website">
 <meta property="og:locale" content="{'en_GB' if c.lang == 'en' else 'de_DE'}">
 <meta property="og:image" content="{SITE}images/thumbs/art25.jpg">
-<link rel="stylesheet" href="{c.asset('css/site.css')}">
+<link rel="stylesheet" href="{c.asset('css/site.css')}?v={CSS_V}">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="{c.asset('fonts/inter-latin-wght-normal.woff2')}">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="{c.asset('fonts/fraunces-latin-wght-normal.woff2')}">
 <meta name="theme-color" content="#faf6f0" media="(prefers-color-scheme: light)">
@@ -136,7 +157,7 @@ def nav(c, key, current):
     <div class="nav-tools">
       <a class="lang-switch" href="{c.other(key)}" hreflang="{other_lang}" lang="{other_lang}"
          title="{esc(t['lang_switch_label'])}" aria-label="{esc(t['lang_switch_label'])}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="9.2"></circle>
           <path d="M2.8 12h18.4M12 2.8a15 15 0 0 1 0 18.4M12 2.8a15 15 0 0 0 0 18.4"></path>
@@ -145,11 +166,11 @@ def nav(c, key, current):
       </a>
       <button class="theme-toggle" id="theme-toggle" type="button"
               aria-label="{esc(t['theme_label'])}" title="{esc(t['theme_label'])}">
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="4.2"></circle>
           <path d="M12 1.6v2.4M12 20v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M1.6 12h2.4M20 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"></path>
@@ -994,6 +1015,9 @@ def sitemap():
 
 
 def main():
+    global CSS_V
+    CSS_V = css_version()
+    print(f"stylesheet version: {CSS_V}")
     os.makedirs(OUT, exist_ok=True)
     os.makedirs(os.path.join(OUT, "de"), exist_ok=True)
     total = 0

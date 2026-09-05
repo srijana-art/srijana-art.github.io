@@ -214,3 +214,22 @@ one.
 
 The full 36 MB download (`images/01 Static Glyph/`, with .ai and .png variants)
 is gitignored. Only the single SVG in use is committed.
+
+
+## Cache busting
+
+Every page links the stylesheet as `css/site.css?v=<hash>`, where the hash is
+the first 8 characters of the SHA-1 of the file, computed at build time by
+`tools/build_site.py`. Change the CSS and the URL changes, so browsers fetch the
+new file instead of reusing the one they cached.
+
+This is not cosmetic. Before it existed, Safari kept an old `site.css` after a
+deploy, the new `.btn-ico` rules were missing, and the contact icons rendered
+at several hundred pixels. The page looked broken while the files on disk were
+perfectly correct.
+
+For the same reason every inline `<svg>` carries explicit `width` and `height`
+attributes as well as CSS sizing. WebKit sizes an attribute-less `<svg>` from
+its intrinsic ratio when it is a flex item, so a stylesheet that fails to load —
+cached, blocked, or 404 — leaves icons enormous rather than merely unstyled.
+Keep the attributes when adding an icon.

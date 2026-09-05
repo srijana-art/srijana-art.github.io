@@ -785,7 +785,7 @@
     transition: border-color 0.15s ease, color 0.15s ease;
     -webkit-tap-highlight-color: transparent;
   }
-  .lang-switch svg { width: 15px; height: 15px; flex: none; opacity: 0.75; }
+  .lang-switch svg { width: 15px; height: 15px; flex: none; display: block; opacity: 0.75; }
   .lang-switch:hover { border-color: var(--accent-soft); color: var(--accent); text-decoration: none; }
   .lang-switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -869,7 +869,7 @@
     transition: border-color 0.15s ease, color 0.15s ease;
     -webkit-tap-highlight-color: transparent;
   }
-  .lang-switch svg { width: 15px; height: 15px; flex: none; opacity: 0.75; }
+  .lang-switch svg { width: 15px; height: 15px; flex: none; display: block; opacity: 0.75; }
   .lang-switch:hover { border-color: var(--accent-soft); color: var(--accent); text-decoration: none; }
   .lang-switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -944,7 +944,10 @@
   }
 
   /* Icons on the contact buttons. Both are generic shapes, not brand marks. */
-  .btn-ico { width: 16px; height: 16px; flex: none; }
+  /* display:block and flex:none matter here: an inline <svg> that is a flex
+     item is sized from its intrinsic ratio in WebKit, which blows up when the
+     width/height attributes are missing. They are now set in the markup too. */
+  .btn-ico { width: 16px; height: 16px; flex: none; display: block; }
   .btn-ico-row {
     display: inline-flex;
     align-items: center;
