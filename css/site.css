@@ -382,18 +382,23 @@
     z-index: 100;
     align-items: center;
     justify-content: center;
-    padding: 60px 72px 76px;
+    padding: 60px 72px;
   }
   .lightbox.open { display: flex; }
+  /* flex-start + auto margins keeps the panel centred when it fits and lets it
+     scroll from the top when a long caption makes it taller than the viewport
+     (centred flex items get clipped at the top instead of scrolling). */
+  .lightbox { align-items: flex-start; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   .lightbox-content {
     max-width: 900px;
     width: 100%;
+    margin: auto 0;
     text-align: center;
   }
   .lightbox-content img {
     max-width: 100%;
-    max-height: 66vh;   /* fallback for browsers without dvh */
-    max-height: 66dvh;  /* iOS: excludes the collapsing browser chrome */
+    max-height: 52vh;   /* fallback for browsers without dvh */
+    max-height: 52dvh;  /* iOS: excludes the collapsing browser chrome */
     width: auto;
     border-radius: 6px;
     box-shadow: 0 30px 70px rgba(0,0,0,0.55);
@@ -408,7 +413,7 @@
     color: var(--accent-soft);
     margin-bottom: 12px;
   }
-  .lightbox-info p { color: #cfc4b6; font-size: 0.95rem; max-width: 580px; margin: 0 auto; }
+  .lightbox-info p { color: #cfc4b6; font-size: 0.95rem; max-width: 620px; margin: 0 auto; line-height: 1.6; }
   .lb-btn {
     position: absolute;
     background: none;
@@ -421,15 +426,14 @@
     transition: background 0.15s ease;
   }
   .lb-btn:hover { background: rgba(255,255,255,0.12); }
-  .lightbox-close { top: 20px; right: 24px; font-size: 1.9rem; }
-  .lightbox-prev, .lightbox-next { top: 50%; transform: translateY(-50%); font-size: 2.2rem; }
+  .lightbox-close { position: fixed; top: 20px; right: 24px; font-size: 1.9rem; }
+  .lightbox-prev, .lightbox-next { position: fixed; top: 50%; transform: translateY(-50%); font-size: 2.2rem; }
   .lightbox-prev { left: 14px; }
   .lightbox-next { right: 14px; }
   .lightbox-counter {
-    position: absolute;
-    bottom: 20px;
-    left: 0; right: 0;
-    text-align: center;
+    position: fixed;
+    top: 28px;
+    left: 30px;
     color: #8d827a;
     font-size: 0.8rem;
     letter-spacing: 0.1em;
@@ -499,7 +503,7 @@
     nav.links a { font-size: 0.86rem; }
     .about-grid { grid-template-columns: 1fr; gap: 36px; }
     .gallery-grid { column-count: 2; }
-    .lightbox { padding: 52px 20px 72px; }
+    .lightbox { padding: 52px 20px; }
     .lightbox-prev { left: 2px; }
     .lightbox-next { right: 2px; }
   }
@@ -511,7 +515,7 @@
     .art-caption { padding: 28px 10px 9px; font-size: 0.72rem; }
     .art-caption strong { font-size: 0.85rem; }
     .contact-box { padding: 44px 24px; }
-    .lightbox-content img { max-height: 58vh; max-height: 58dvh; }
+    .lightbox-content img { max-height: 44vh; max-height: 44dvh; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -885,4 +889,22 @@
     font-size: 0.76rem;
     color: var(--ink-soft);
     background: var(--card);
+  }
+
+  /* On a wide screen the caption sits beside the painting rather than under it,
+     so a long story can't push the enquiry button below the fold. */
+  @media (min-width: 900px) {
+    .lightbox { padding: 48px 80px; }
+    .lightbox-content {
+      max-width: 1120px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
+      gap: 40px;
+      align-items: center;
+      text-align: left;
+    }
+    .lightbox-content img { max-height: 80vh; max-height: 80dvh; }
+    .lightbox-info { margin-top: 0; }
+    .lightbox-info p { margin: 0; max-width: none; }
+    .lightbox-actions { justify-content: flex-start; }
   }

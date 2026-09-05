@@ -21,7 +21,6 @@ OUT = os.environ.get("OUT", "build")
 SITE = "https://srijana-art.github.io/"
 EMAIL = "srijana.art.gallery@gmail.com"
 INSTA = "https://www.instagram.com/srijana.art.gallery/"
-ETSY = "https://www.etsy.com/shop/SrijanaArtGallery"
 KW_FEST = "https://www.markkleeberg.de/kunstwinkelfest"
 KW_AUCTION_HOUSE = "https://auktion.ikv-fester.de/"
 GO_LISTING = "https://rausgegangen.de/en/events/kunstmarkt-227/"
@@ -162,7 +161,6 @@ def contact_section(c):
       <div class="contact-links">
         <a href="mailto:{EMAIL}?subject={subj}" class="btn btn-solid">{esc(t['contact_btn'])}</a>
         <a href="{INSTA}" target="_blank" rel="noopener" class="btn btn-outline">@srijana.art.gallery</a>
-        <a href="{ETSY}" target="_blank" rel="noopener" class="btn btn-outline">{esc(t['contact_prints'])}</a>
       </div>
     </div>
   </div>
@@ -368,14 +366,21 @@ GALLERY_JS = r"""
     else if (e.key === 'ArrowRight') step(1);
   });
 
-  var touchX = null;
-  lightbox.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
-  lightbox.addEventListener('touchmove', function (e) { if (e.cancelable) e.preventDefault(); }, { passive: false });
+  // Swipe left/right to move between works. Vertical movement must stay a
+  // normal scroll — a long caption makes the panel taller than the screen —
+  // so nothing is preventDefault'ed and a swipe only counts when it is clearly
+  // more horizontal than vertical.
+  var touchX = null, touchY = null;
+  lightbox.addEventListener('touchstart', function (e) {
+    touchX = e.changedTouches[0].clientX;
+    touchY = e.changedTouches[0].clientY;
+  }, { passive: true });
   lightbox.addEventListener('touchend', function (e) {
     if (touchX === null) return;
     var dx = e.changedTouches[0].clientX - touchX;
-    if (Math.abs(dx) > 55) step(dx < 0 ? 1 : -1);
-    touchX = null;
+    var dy = e.changedTouches[0].clientY - touchY;
+    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
+    touchX = touchY = null;
   }, { passive: true });
 
   document.querySelectorAll('.filter-btn').forEach(function (btn) {
@@ -538,7 +543,7 @@ def build_index(c):
       <p>{esc(t['gal_p'])}</p>
     </div>
 
-    <div class="avail-note">{t['avail'].format(etsy=ETSY)}</div>
+    <div class="avail-note">{t['avail']}</div>
 
     <div class="gallery-filter">
       {chr(10).join('      ' + f for f in filters).strip()}
@@ -939,7 +944,7 @@ def build_datenschutz(c):
        sobald sie f&uuml;r den Zweck nicht mehr erforderlich sind.</p>
 
     <h2>6. Externe Links</h2>
-    <p>Diese Website verlinkt auf Instagram, Etsy sowie die Seiten der Stadt Markkleeberg und
+    <p>Diese Website verlinkt auf Instagram sowie die Seiten der Stadt Markkleeberg und
        des Auktionshauses. F&uuml;r die Datenverarbeitung auf diesen Seiten gelten die jeweiligen
        Datenschutzerkl&auml;rungen der Anbieter. Es werden keine Inhalte dieser Dienste direkt in
        diese Website eingebettet; das Video wird von dieser Website selbst ausgeliefert.</p>

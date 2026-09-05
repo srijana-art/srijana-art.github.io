@@ -114,7 +114,7 @@
       <p>Fünfundzwanzig Bilder — Porträts, Landschaften und Stillleben. Klicken Sie auf ein Werk, um es größer zu sehen.</p>
     </div>
 
-    <div class="avail-note"><strong>Die meisten dieser Bilder sind verfügbar.</strong> Preise stehen nicht dabei, weil sie von Größe, Technik und Rahmung abhängen — öffnen Sie ein Bild und klicken Sie auf <em>Nach diesem Bild fragen</em>, dann meldet sich Srijana mit einem Preis. Drucke ausgewählter Arbeiten gibt es auf <a href="https://www.etsy.com/shop/SrijanaArtGallery" target="_blank" rel="noopener">Etsy</a>.</div>
+    <div class="avail-note"><strong>Die meisten dieser Bilder sind verfügbar.</strong> Preise stehen nicht dabei, weil sie von Größe, Technik und Rahmung abhängen — öffnen Sie ein Bild und klicken Sie auf <em>Nach diesem Bild fragen</em>, dann meldet sich Srijana in der Regel innerhalb von zwei Tagen mit einem Preis.</div>
 
     <div class="gallery-filter">
       <button class="filter-btn active" data-filter="all">Alle <span class="count">25</span></button>
@@ -125,16 +125,16 @@
 
     <div class="gallery-grid">
       <figure class="art-card" data-cat="portrait" tabindex="0" role="button"
-              aria-label="Die Morgenpfeife größer ansehen"
+              aria-label="Sanftheit die bleibt größer ansehen"
               data-full="../images/web/art25.jpg"
-              data-title="Die Morgenpfeife"
+              data-title="Sanftheit die bleibt"
               data-medium="Acryl auf Leinwand"
-              data-desc="Eine alte Frau zieht an ihrer Pfeife, beide Hände darum gelegt; das ganze Bild bleibt in einem einzigen warmen Ocker- und Rosaton. Dieses Werk hängt jetzt in der Freiluftgalerie Am Kunstwinkel in Markkleeberg."
+              data-desc="Dies ist eine alte Frau aus Bhaktapur, einer alten Stadt in Nepal. Ihr Gesicht hat mich angezogen — die Falten, der Ausdruck, das graue Haar. Für mich trägt dieses Gesicht ein ganzes Leben voller Geschichten und Erfahrungen. Ich komme aus Nepal; diese Gesichter und diese Gesten gehören zu der Bilderwelt, in der ich aufgewachsen bin. Bhaktapur hat einen ganz eigenen kulturellen Charakter, und ich wollte ein kleines Stück dieser Welt in diesen europäischen Kunstraum bringen."
               data-exhibition="ausstellung-kunstwinkel.html">
         <span class="badge badge-exhibited">Ausgestellt</span>
         <img src="../images/thumbs/art25.jpg" width="1510" height="1545"
-             loading="lazy" decoding="async" alt="Gemälde einer alten Frau mit grauem Haar, die eine in beiden Händen gehaltene Pfeife raucht">
-        <figcaption class="art-caption"><strong>Die Morgenpfeife</strong>Acryl auf Leinwand</figcaption>
+             loading="lazy" decoding="async" alt="Gemälde einer alten Frau aus Bhaktapur mit grauem Haar, die ihre hohlen Hände zum Gesicht führt und raucht">
+        <figcaption class="art-caption"><strong>Sanftheit die bleibt</strong>Acryl auf Leinwand</figcaption>
       </figure>
 
       <figure class="art-card" data-cat="portrait" tabindex="0" role="button"
@@ -427,7 +427,6 @@
       <div class="contact-links">
         <a href="mailto:srijana.art.gallery@gmail.com?subject=Bildanfrage" class="btn btn-solid">Srijana schreiben</a>
         <a href="https://www.instagram.com/srijana.art.gallery/" target="_blank" rel="noopener" class="btn btn-outline">@srijana.art.gallery</a>
-        <a href="https://www.etsy.com/shop/SrijanaArtGallery" target="_blank" rel="noopener" class="btn btn-outline">Drucke auf Etsy</a>
       </div>
     </div>
   </div>
@@ -595,14 +594,21 @@
     else if (e.key === 'ArrowRight') step(1);
   });
 
-  var touchX = null;
-  lightbox.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
-  lightbox.addEventListener('touchmove', function (e) { if (e.cancelable) e.preventDefault(); }, { passive: false });
+  // Swipe left/right to move between works. Vertical movement must stay a
+  // normal scroll — a long caption makes the panel taller than the screen —
+  // so nothing is preventDefault'ed and a swipe only counts when it is clearly
+  // more horizontal than vertical.
+  var touchX = null, touchY = null;
+  lightbox.addEventListener('touchstart', function (e) {
+    touchX = e.changedTouches[0].clientX;
+    touchY = e.changedTouches[0].clientY;
+  }, { passive: true });
   lightbox.addEventListener('touchend', function (e) {
     if (touchX === null) return;
     var dx = e.changedTouches[0].clientX - touchX;
-    if (Math.abs(dx) > 55) step(dx < 0 ? 1 : -1);
-    touchX = null;
+    var dy = e.changedTouches[0].clientY - touchY;
+    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
+    touchX = touchY = null;
   }, { passive: true });
 
   document.querySelectorAll('.filter-btn').forEach(function (btn) {

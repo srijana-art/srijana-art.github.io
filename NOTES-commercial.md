@@ -19,7 +19,7 @@ office before acting on it.
 | "Enquire about this piece" | On every painting in the lightbox. Opens the visitor's mail app with the title, medium and a checklist of questions already written |
 | Availability message | Above the gallery grid — says work is available and explains why prices aren't listed |
 | Exhibitions section | `exhibitions.html` + one page per event, designed to stay as an archive |
-| Instagram / Etsy | Linked from Contact and the availability note |
+| Instagram | Linked from Contact and the availability note |
 | Impressum / Datenschutz | Built, linked in every footer, **awaiting real details** |
 
 The single most valuable thing here is the prefilled enquiry email. The reason
@@ -82,14 +82,13 @@ commission enquiries actually come from.
 
 Instagram allows one link. Rather than pointing it at the homepage, a small
 `/links` page with four buttons — *See the gallery · Commission a portrait ·
-Where I'm exhibiting · Prints on Etsy* — lets her steer people without changing
 the bio every time. Cheap to build, easy to reorder.
 
 ### 2.5 Sold / Available markers
 
 Marking a piece **Sold** is not a loss — it's the strongest signal on the whole
 site that other people buy her work. Keep sold pieces visible with a quiet
-badge. The Kunstwinkel badge already on *The Morning Pipe* does the same job:
+badge. The Kunstwinkel badge already on *Softness that Endures* does the same job:
 it says someone else selected this.
 
 ### 2.6 Findability
@@ -187,10 +186,13 @@ much simpler place than running a shop.
    one-off link by email after agreeing the price. The site stays static; no
    checkout, no cart, no stored card data. Good middle ground if people ask to
    pay by card.
-3. **Etsy for anything shipped.** She already has a shop. Etsy handles VAT,
-   invoicing, distance-selling rights and — importantly — the packaging
-   obligations. For prints in particular, letting Etsy carry that burden is worth
-   the fee. Keep originals as enquiry-only on her own site.
+3. ~~**Etsy for anything shipped.**~~ **Ruled out (Sept 2026).** She does not
+   want Etsy as an outlet, so all Etsy links have been removed from the site.
+   Worth knowing what that decision costs: Etsy was absorbing VAT handling,
+   invoicing, the distance-selling rules and the packaging obligations. Selling
+   direct means she carries all of those herself — which is why the
+   Widerrufsbelehrung in `docs/verkauf-vorlagen.md` and the LUCID registration
+   below are now load-bearing rather than optional.
 
 One more practical point, given she's currently between jobs: income from art
 sales can interact with benefits and with any Minijob arrangement. Worth a
