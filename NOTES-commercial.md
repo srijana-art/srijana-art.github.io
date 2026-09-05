@@ -221,8 +221,7 @@ records of the Kunstwinkel selection and every sale is worth doing from today.
    artists they feel they've met. Her own words about finishing a painting are
    already the best copy on the site; more of that is better than more polish.
 
-What I would *not* do: add a shop, add a cart, add a newsletter, or add
-analytics. Each one adds a compliance obligation and none of them is the
+What I would *not* do: add a shop, add a cart, or add a newsletter. Each one adds a compliance obligation and none of them is the
 bottleneck right now. The bottleneck is that a person on Instagram cannot link
 one painting.
 
@@ -307,3 +306,43 @@ as a guard.
 | Prices shown | None — so the Preisangabenverordnung is not triggered |
 | **LUCID packaging register** | **Outstanding** — needed before the first shipped sale |
 | Legal review | Recommended once, before the first sale |
+
+
+---
+
+## 10. Analytics — decided against (Sept 2026)
+
+The question came up whether to count page visits and show the number on the
+site. Decision: **no analytics at all.**
+
+Why it isn't trivial: GitHub Pages is static, so there is no server to count
+requests. Any visitor count requires a third-party script in the page, which
+means the site stops being self-contained and the Datenschutzerklärung needs a
+section describing that transfer. Right now the site makes **zero external
+requests** — no fonts, no analytics, no embeds — which is unusual and is what
+lets the privacy notice say plainly that nothing reaches anyone else.
+
+**Note the gap this leaves:** GitHub's Insights → Traffic tab counts visits to
+the *repository page on github.com*, not to the published website. So with this
+decision there is currently no way to know how many people visit the site. That
+is a deliberate trade, not an oversight.
+
+If that becomes frustrating, the least-bad option is **GoatCounter**
+(goatcounter.com): free for personal sites, EU-hosted, no cookies, no consent
+banner required, and one script tag:
+
+```html
+<script data-goatcounter="https://MYCODE.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+```
+
+It also has a public counter endpoint if the number should ever be shown —
+`https://MYCODE.goatcounter.com/counter/<path>.json|html|svg|png`, off by
+default, enabled under "Allow adding visitor counts on your website", cached for
+up to four hours.
+
+A public counter on an artist's portfolio is still worth avoiding on its own
+merits: a low number argues against her, and nobody deciding whether to buy a
+painting is looking for one. The credibility signals that matter are already on
+the site — selected as one of 24 for the Kunstwinkel, and exhibiting at Garage
+Ost.

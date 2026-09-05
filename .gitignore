@@ -1,19 +1,17 @@
-# Full-resolution scans — kept locally, not pushed to GitHub.
-# The site serves the optimized JPEGs in images/thumbs/ and images/web/.
-images/png/
-images/old/
-images/markkeleeberg_kunst_winkel_fest/
+# The repo is published as a public website: everything committed here is
+# downloadable by anyone. Master files live OUTSIDE the repo, in
+# ../my/srijana_work/20260812/github_io_webpage/ORIGINALS/ — see its README.txt.
 
-.DS_Store
-**/.DS_Store
-
-# Safety net: this repo is published as a public website. Personal documents
-# (tax letters, ID scans, invoices) must never be committed here — anything in
-# the repo is downloadable by anyone once Pages is live.
+# Personal documents must never be committed (tax letters, ID scans, invoices).
 *.pdf
 !docs/*.pdf
 
-# Camera originals dropped into images/ — the site serves the versions
-# generated into images/web, images/thumbs and images/events.
+# Camera originals dropped into images/ by mistake — the site serves the
+# versions generated into images/web, images/thumbs and images/events.
 images/IMG_*.jpg
 images/IMG_*.JPG
+images/*.mov
+images/*.MOV
+
+.DS_Store
+**/.DS_Store

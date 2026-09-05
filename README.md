@@ -29,10 +29,25 @@ A single-page portfolio site for Srijana GS, built from her Instagram (@srijana.
 - `images/events/` — exhibition photographs
 - `images/video/` — the artist film (mp4 + poster), if present
 - `images/web/` — larger JPEGs (max 1600px) shown in the lightbox and the About portrait
-- `images/png/` — full-resolution scans. **Not published** (see `.gitignore`) — kept locally as the masters
-- `images/old/` — the four earlier low-res images, superseded. Also not published
+The repo now contains **only** what the site serves — no camera originals, no
+scans, no duplicates. Every image in `images/` is referenced by a page.
 
-Only `index.html` and `images/thumbs` + `images/web` need to go to GitHub — about 14 MB. The PNG masters are ~95 MB and are deliberately excluded.
+## Master files live outside the repo
+
+`../my/srijana_work/20260812/github_io_webpage/ORIGINALS/` holds everything the
+website images were made from:
+
+- `paintings/` — `Srijana1..25.png`, the full-resolution scans. **These are the
+  only copies.** Everything in `images/web` and `images/thumbs` is derived from
+  them. Needed for prints, gallery submissions and future exhibition entries —
+  and once a painting is sold it cannot be re-scanned.
+- `kunstwinkelfest/` — `IMG_4534.jpg` and `IMG_4552.jpg` (the two photos the
+  site's crops come from) and `IMG_4535.mov` (the camera original of the video).
+- `artist-studio-original.jpg` — the source for the About photo.
+
+They are kept out of the repo on purpose: this is a public website, and 117 MB
+of masters has no business being downloadable. Back that folder up somewhere
+that is not this laptop.
 
 ## How to publish this on GitHub Pages (username: srijana-art)
 
@@ -187,3 +202,15 @@ identifiable stranger is a different matter.
 
 The Garage Ost poster is the organiser's own artwork, used to announce her
 participation and credited on the page.
+
+## The Instagram glyph
+
+`images/instagram-glyph-white.svg` is Meta's official asset, copied unmodified
+from their brand resources. It is used **as-is** — no CSS filters, no recolour,
+no redrawing. The contact panel is dark in both light and dark mode, so the
+white variant is the correct one; if that panel ever becomes light, swap to
+`Instagram_Glyph_Black.svg` from the same download rather than filtering this
+one.
+
+The full 36 MB download (`images/01 Static Glyph/`, with .ai and .png variants)
+is gitignored. Only the single SVG in use is committed.

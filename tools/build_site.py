@@ -32,6 +32,18 @@ VIDEO_W, VIDEO_H = 1080, 1920
 EXHIBITED = {25: "kunstwinkel"}   # artwork id -> page key
 
 
+# Small inline icons for the contact buttons. Both are generic shapes drawn
+# here — deliberately NOT the Instagram brand glyph, which is a registered mark
+# and should come from Meta's own brand resources if it is used at all.
+ICON_MAIL = ('<svg class="btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+             'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+             '<rect x="2.5" y="4.8" width="19" height="14.4" rx="2.2"></rect>'
+             '<path d="M3.2 6.6 12 13.1l8.8-6.5"></path></svg>')
+# Meta's official white Instagram glyph, used unmodified from their brand
+# resources. The contact panel is dark in both themes, so the white variant is
+# the correct one; do not recolour it.
+
+
 def esc(s):
     return html.escape(str(s), quote=True)
 
@@ -157,10 +169,10 @@ def contact_section(c):
     <div class="contact-box">
       <h2>{t['contact_h']}</h2>
       <p>{esc(t['contact_p'])}</p>
-      <a class="contact-email" href="mailto:{EMAIL}">{EMAIL}</a>
+      <a class="contact-email" href="mailto:{EMAIL}">{ICON_MAIL}<span>{EMAIL}</span></a>
       <div class="contact-links">
-        <a href="mailto:{EMAIL}?subject={subj}" class="btn btn-solid">{esc(t['contact_btn'])}</a>
-        <a href="{INSTA}" target="_blank" rel="noopener" class="btn btn-outline">@srijana.art.gallery</a>
+        <a href="mailto:{EMAIL}?subject={subj}" class="btn btn-solid btn-ico-row">{ICON_MAIL}{esc(t['contact_btn'])}</a>
+        <a href="{INSTA}" target="_blank" rel="noopener" class="btn btn-outline btn-ico-row"><img class="btn-ico btn-ico-img" src="{c.asset('images/instagram-glyph-white.svg')}" alt="" width="17" height="17">@srijana.art.gallery</a>
       </div>
     </div>
   </div>
