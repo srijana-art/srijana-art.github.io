@@ -653,13 +653,7 @@ def film_block(c):
 
 def build_kunstwinkel(c):
     t = c.t
-    photos = [("kw-board", t['kw_alt_board']),
-              ("kw-artist-wall", t['kw_alt_artist_wall']),
-              ("kw-panel-detail", t['kw_alt_detail']),
-              ("kw-wall-lettering", t['kw_alt_lettering']),
-              ("kw-artist", t['kw_alt_artist']),
-              ("kw-board-angle", t['kw_alt_angle']),
-              ("kw-wall-wide", t['kw_alt_wide']),
+    photos = [("kw-wall-lettering", t['kw_alt_lettering']),
               ("kw-artist-full", t['kw_alt_artist_full'])]
     strip = "\n".join(
         f'''      <figure><img src="{c.asset(f'images/events/{n}-sm.jpg')}" '''
@@ -733,7 +727,7 @@ def build_kunstwinkel(c):
       <h2>{esc(t['kw_photos_h'])}</h2>
       <p>{esc(t['kw_photos_p'])}</p>
     </div>
-    <div class="photo-strip" id="photo-strip">
+    <div class="photo-strip photo-strip--pair" id="photo-strip">
 {strip}
     </div>
   </div>

@@ -17,10 +17,12 @@ mkdir -p "$OUT"
 # -vf scale: cap the long edge at 1280px. Plenty for a web page, and it is what
 # takes a 200 MB iPhone clip down to something a git repo should hold.
 # -crf 26 is the quality knob: lower = better and bigger, 23-28 is the useful range.
-ffmpeg -y -i "$SRC" \
+# -an strips the audio. Phone clips pick up whatever music was playing at the
+# venue, and publishing that is a copyright problem regardless of how incidental
+# it was. Drop -an only if the sound is genuinely the artist's own.
+ffmpeg -y -i "$SRC" -an \
   -vf "scale='if(gt(iw,ih),min(1280,iw),-2)':'if(gt(iw,ih),-2,min(1280,ih))',format=yuv420p" \
   -c:v libx264 -profile:v high -level 4.0 -preset slow -crf 26 \
-  -c:a aac -b:a 128k -ac 2 \
   -movflags +faststart \
   "$OUT/$NAME.mp4"
 

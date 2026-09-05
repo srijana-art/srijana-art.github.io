@@ -147,6 +147,11 @@ re-encoded from an iPhone Cinematic-mode clip with `tools/encode-video.sh`:
 HEVC (which Chrome and Firefox cannot play) to H.264, 14 MB down to 4 MB,
 `+faststart` so it starts before it has finished downloading.
 
+**The audio track is deliberately stripped** (`-an`). The clip was filmed at a
+public festival and picked up the music playing there; publishing that alongside
+the video is a copyright problem however incidental it was. Keep new clips silent
+unless the sound is the artist's own.
+
 It is committed to the repo directly. **Do not put it in Git LFS** — GitHub Pages
 does not resolve LFS objects; it serves the pointer file and the player fails
 silently. Anything under GitHub's 100 MB per-file limit should just be committed.

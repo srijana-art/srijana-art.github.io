@@ -922,3 +922,20 @@
   @media (max-width: 540px) {
     .fact-wide .num { font-size: 0.98rem; }
   }
+
+  /* Two photographs read better side by side than dropped into a 3-column
+     masonry, where one column would sit empty. */
+  .photo-strip--pair {
+    column-count: initial;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+    max-width: 820px;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: start;
+  }
+  .photo-strip--pair figure { margin: 0; }
+  @media (max-width: 640px) {
+    .photo-strip--pair { grid-template-columns: 1fr; gap: 14px; max-width: 420px; }
+  }

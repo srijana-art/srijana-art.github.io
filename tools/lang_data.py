@@ -175,7 +175,7 @@ ART = {
    en=("Softness that Endures", "Acrylic on canvas",
        "This is an old woman from Bhaktapur, an ancient city in Nepal. I was drawn to her face — the wrinkles, the expression, the grey hair. To me, her face carries a whole lifetime of stories and experiences. I am from Nepal, so these faces and these gestures are part of the visual world I grew up with. Bhaktapur has a very distinctive cultural character, and I wanted to bring a small piece of that world into this European art space.",
        "Painting of an elderly woman from Bhaktapur with grey hair, her cupped hands raised to her face as she smokes"),
-   de=("Sanftheit die bleibt", "Acryl auf Leinwand",
+   de=("Sanftheit, die bleibt", "Acryl auf Leinwand",
        "Dies ist eine alte Frau aus Bhaktapur, einer alten Stadt in Nepal. Ihr Gesicht hat mich angezogen — die Falten, der Ausdruck, das graue Haar. Für mich trägt dieses Gesicht ein ganzes Leben voller Geschichten und Erfahrungen. Ich komme aus Nepal; diese Gesichter und diese Gesten gehören zu der Bilderwelt, in der ich aufgewachsen bin. Bhaktapur hat einen ganz eigenen kulturellen Charakter, und ich wollte ein kleines Stück dieser Welt in diesen europäischen Kunstraum bringen.",
        "Gemälde einer alten Frau aus Bhaktapur mit grauem Haar, die ihre hohlen Hände zum Gesicht führt und raucht")),
 }
@@ -295,7 +295,7 @@ S = {
   card_go_p="Ein eigener Tisch beim Kunstmarkt in der Garage Ost — Originale, Studien und Drucke, und die Gelegenheit, persönlich über eine Auftragsarbeit zu sprechen.",
   card_kw_h="Am Kunstwinkel — „Mein Bild für Dich“",
   card_kw_when="Ab 5. September 2026 · Markkleeberg",
-  card_kw_p="„Sanftheit die bleibt“ wurde als eines von 24 Werken für die Freiluftgalerie in Markkleeberg ausgewählt. Ein Jahr lang hängt das Bild dort, danach wird es versteigert.",
+  card_kw_p="„Sanftheit, die bleibt“ wurde als eines von 24 Werken für die Freiluftgalerie in Markkleeberg ausgewählt. Ein Jahr lang hängt das Bild dort, danach wird es versteigert.",
   exh_cta="<strong>Sie organisieren etwas?</strong> Srijana freut sich über Märkte, Gruppenausstellungen und Ausstellungen in Cafés oder Praxen in und um Leipzig. Schreiben Sie an <a href=\"mailto:{email}\">{email}</a>.",
 ),
 }
@@ -376,10 +376,10 @@ S["en"].update(
 
 S["de"].update(
   kw_title="Am Kunstwinkel, Markkleeberg 2026/27 — Srijana GS",
-  kw_desc="„Sanftheit die bleibt“ von Srijana GS ist eines von 24 Werken der Freiluftgalerie Am Kunstwinkel in Markkleeberg — zu sehen bis 2027, danach Versteigerung.",
+  kw_desc="„Sanftheit, die bleibt“ von Srijana GS ist eines von 24 Werken der Freiluftgalerie Am Kunstwinkel in Markkleeberg — zu sehen bis 2027, danach Versteigerung.",
   kw_pill="Zu sehen bis Herbst 2027",
   kw_h="Am Kunstwinkel, Markkleeberg",
-  kw_lede="„Sanftheit die bleibt“ wurde als eines von 24 Werken für die Freiluftgalerie 2026/27 an der Kunstwinkel-Wand ausgewählt, unter dem Motto <em>„Mein Bild für Dich“</em>. Enthüllt wurde die Sammlung beim 8. Kunstwinkelfest am 5. September 2026; das Bild hängt dort ein volles Jahr.",
+  kw_lede="„Sanftheit, die bleibt“ wurde als eines von 24 Werken für die Freiluftgalerie 2026/27 an der Kunstwinkel-Wand ausgewählt, unter dem Motto <em>„Mein Bild für Dich“</em>. Enthüllt wurde die Sammlung beim 8. Kunstwinkelfest am 5. September 2026; das Bild hängt dort ein volles Jahr.",
   kw_work_p="„Dies ist eine alte Frau aus Bhaktapur, einer alten Stadt in Nepal. Ihr Gesicht hat mich angezogen — die Falten, der Ausdruck, das graue Haar. Für mich trägt dieses Gesicht ein ganzes Leben voller Geschichten und Erfahrungen. Bhaktapur hat einen ganz eigenen kulturellen Charakter, und ich wollte ein kleines Stück dieser Welt in diesen europäischen Kunstraum bringen.“",
   kw_see_gallery="In der Galerie ansehen",
   kw_how_h="Wie das hier funktioniert",
@@ -404,7 +404,7 @@ S["de"].update(
   kw_photos_p="Das 8. Kunstwinkelfest, als die neue Sammlung an die Wand kam.",
   kw_alt_board="Die Wand der Freiluftgalerie Am Kunstwinkel in Markkleeberg mit den 24 neu enthüllten Werken",
   kw_alt_artist_wall="Srijana vor der Kunstwinkel-Wand am Tag der Enthüllung",
-  kw_alt_detail="Nahaufnahme der Wand mit „Sanftheit die bleibt“ zwischen den Nachbarwerken",
+  kw_alt_detail="Nahaufnahme der Wand mit „Sanftheit, die bleibt“ zwischen den Nachbarwerken",
   kw_alt_lettering="Der Schriftzug Am Kunstwinkel über der angebrachten Sammlung von 24 Werken",
   kw_alt_wide="Die Giebelwand Am Kunstwinkel mit der Freiluftgalerie unter dem Schriftzug",
   kw_alt_artist="Srijana beim Kunstwinkelfest",
